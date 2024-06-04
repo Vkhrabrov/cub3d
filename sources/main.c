@@ -198,7 +198,7 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    map_reading(&data.map);
+    map_reading(&data.map) ;
 
     // Calculate the cell size based on the map and window dimensions
     int cell_size_width = WINDOW_WIDTH / data.map.map_width;
