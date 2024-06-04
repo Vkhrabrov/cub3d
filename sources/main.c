@@ -101,7 +101,7 @@ int render_background(t_data *data) {
         }
     }
     render_map(data);
-    draw_player(data, data->player.x, data->player.y, data->cell_size / 4, PLAYER_COLOR); // Adjust player size
+    draw_player(data, data->player.x, data->player.y, data->player_size, PLAYER_COLOR); // Adjust player size
     mlx_put_image_to_window(data->mlx, data->window, data->image, 0, 0);
     return 0;
 }
@@ -116,42 +116,60 @@ int key_hook(int keycode, t_data *data) {
 
     int new_x = data->player.x;
     int new_y = data->player.y;
+    int move_step = data->cell_size / 4; // Dynamic move step
 
-    if (keycode == 53) // ESC key code on MacOS
+    if (keycode == 65307) // ESC key code on MacOS
         close_window(data);
-    else if (keycode == 123) // Left arrow key
-        new_x -= MOVE_STEP;
-    else if (keycode == 124) // Right arrow key
-        new_x += MOVE_STEP;
-    else if (keycode == 125) // Down arrow key
-        new_y += MOVE_STEP;
-    else if (keycode == 126) // Up arrow key
-        new_y -= MOVE_STEP;
+    else if (keycode == 65361) // Left arrow key
+        new_x -= move_step;
+    else if (keycode == 65363) // Right arrow key
+        new_x += move_step;
+    else if (keycode == 65364) // Down arrow key
+        new_y += move_step;
+    else if (keycode == 65362) // Up arrow key
+        new_y -= move_step;
 
     printf("New position before bounds check: (%d, %d)\n", new_x, new_y);
 
-    // Ensure the new position is within the map bounds
-    int max_x = (int)(data->map.map_width * data->cell_size);
-    int max_y = (int)(data->map.map_height * data->cell_size);
-    if (new_x < 0) new_x = 0;
-    if (new_x > max_x) new_x = max_x;
-    if (new_y < 0) new_y = 0;
-    if (new_y > max_y) new_y = max_y;
+    // Calculate the player's bounding box
+    int half_size = data->player_size / 2;
+    int left_x = (new_x - half_size) / data->cell_size;
+    int right_x = (new_x + half_size) / data->cell_size;
+    int top_y = (new_y - half_size) / data->cell_size;
+    int bottom_y = (new_y + half_size) / data->cell_size;
 
     // Ensure the new position is not within a wall
-    int map_x = new_x / data->cell_size;
-    int map_y = new_y / data->cell_size;
-    if (data->map.map_data[map_y][map_x] != '1') {
+    if (data->map.map_data[top_y][left_x] != '1' &&
+        data->map.map_data[top_y][right_x] != '1' &&
+        data->map.map_data[bottom_y][left_x] != '1' &&
+        data->map.map_data[bottom_y][right_x] != '1') {
+        data->player.x = new_x;
+        data->player.y = new_y;
+    } else {
+        // Check individual points around the player's bounding box to prevent gaps
+        if (data->map.map_data[top_y][left_x] == '1') new_x += move_step;
+        if (data->map.map_data[top_y][right_x] == '1') new_x -= move_step;
+        if (data->map.map_data[bottom_y][left_x] == '1') new_x += move_step;
+        if (data->map.map_data[bottom_y][right_x] == '1') new_x -= move_step;
+
+        if (data->map.map_data[top_y][left_x] == '1') new_y += move_step;
+        if (data->map.map_data[top_y][right_x] == '1') new_y += move_step;
+        if (data->map.map_data[bottom_y][left_x] == '1') new_y -= move_step;
+        if (data->map.map_data[bottom_y][right_x] == '1') new_y -= move_step;
+
+        // Set new positions after individual checks
         data->player.x = new_x;
         data->player.y = new_y;
     }
 
-    printf("Player position after move: (%zu, %zu)\n", data->player.x, data->player.y);
+    printf("Player position after move: (%ld, %ld)\n", data->player.x, data->player.y);
 
     // Re-render the background and map after moving the player
     render_background(data);
     return 0;
 }
+
+
 
 int main() {
     t_data data;
@@ -188,7 +206,7 @@ int main() {
     data.cell_size = (cell_size_width < cell_size_height) ? cell_size_width : cell_size_height;
 
     // Initialize player size based on cell size
-    data.player_size = data.cell_size / 4;
+    data.player_size = data.cell_size / 3;
 
     render_background(&data);
 

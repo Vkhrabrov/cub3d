@@ -14,18 +14,18 @@
 
 CC				=		gcc
 HEADER_NAME		=		cub3d.h
-LIBMLX_NAME		=		libmlx_Linux.a
+LIBMLX_NAME		=		libmlx.a
 LIBFT_NAME		=		libft.a
 NAME			=		cub3d
 
 # --- Compiler flags --------------------------------------------------------- #
 
 CFLAGS			=		-MMD -Wall -Wextra -Werror
-LIBMLX_FLAGS	=		-lmlx -lX11 -lXext -lm -lbsd
+LIBMLX_FLAGS	=		-lmlx -framework OpenGL -framework AppKit
 
 # --- Directories ------------------------------------------------------------ #
 
-LIBMLX_DIR		=		libraries/minilibx_linux/
+LIBMLX_DIR		=		libraries/minilibx_macos/
 LIBFT_DIR		=		libraries/libft/
 INC_DIR			=		includes/
 SRC_DIR			=		sources/
@@ -35,7 +35,7 @@ DEP_DIR			= 		$(OBJ_DIR)
 # --- Includes --------------------------------------------------------------- #
 
 INCLUDES		=		-I $(INC_DIR) -I $(LIBFT_DIR) -I $(LIBMLX_DIR)
-LIB_INCLUDE		=		-L $(LIBFT_DIR) -lft -L $(LIBMLX_DIR) $(LIBMLX_FLAGS)
+LIB_INCLUDE		=		-L $(LIBFT_DIR) -lft -L $(LIBMLX_DIR)
 
 # --- Files ------------------------------------------------------------------ #
 
@@ -59,7 +59,7 @@ all:
 		$(MAKE) $(NAME)
 
 $(NAME): $(OBJ_PATH) $(LIBMLX_PATH) Makefile
-	$(CC) $(CFLAGS)  $(INCLUDES) $(OBJ_PATH) -o $@ $(LIB_INCLUDE)
+	$(CC) $(CFLAGS)  $(INCLUDES) $(OBJ_PATH) -o $@ $(LIB_INCLUDE) $(LIBMLX_FLAGS)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -MMD -c $< -o $@
@@ -82,4 +82,3 @@ fclean:		clean
 re:			fclean all
 
 .PHONY:		all clean fclean re
-
