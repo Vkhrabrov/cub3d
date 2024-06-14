@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/07 23:37:50 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/14 23:28:36 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
+
+
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -39,14 +42,16 @@ typedef struct s_color {
 } t_color;
 
 typedef struct s_player {
-    size_t x;
-    size_t y;
+    float x;
+    float y;
     double angle;
     int move_forward;
     int move_backward;
     int rotate_left;
     int rotate_right;
-    double ray_length; // Length of the ray
+    double ray_length;
+    int strafe_left;
+    int strafe_right; // Length of the ray
 } t_player;
 
 typedef struct s_map {
@@ -69,10 +74,11 @@ typedef struct s_data {
     int bits_per_pixel;
     int line_length;
     int endian;
-    size_t cell_size;
-	size_t player_size;
-    t_player player;
     t_map map;
+    t_player player;
+    int cell_size;
+    int player_size;
+    struct timespec prev_time; // Add this line
 } t_data;
 
 /* --- Functions ------------------------------------------------------------ */
