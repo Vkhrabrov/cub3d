@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/14 23:28:36 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/18 23:33:41 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,18 @@
 
 
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 2048
+#define WINDOW_HEIGHT 1536
 #define GREY_COLOR 0x808080
 #define PLAYER_COLOR 0xFF0000 // Red color for the player
 // #define PLAYER_SIZE 8  // Half-size of the player square
 #define MOVE_STEP WINDOW_WIDTH/100 // Step size for player movement
 #define WALL_COLOR 0xFFFFFF // White color for walls
+#define BLUE_COLOR 0x0000FF
 #define EMPTY_COLOR 0x000000 // Black color for empty space
 #define PI 3.14159265359
+#define CEILING_COLOR 0x87CEEB // Light blue color for ceiling
+#define FLOOR_COLOR 0x8B4513 // Brown color for floor
 // #define DEFAULT_CELL_SIZE 20 // Default size of each cell in the map
 
 /* --- Data structures ------------------------------------------------------ */
@@ -40,6 +43,16 @@ typedef struct s_color {
     unsigned char green;
     unsigned char blue;
 } t_color;
+
+typedef struct s_texture {
+    void *img;
+    char *addr;
+    int width;
+    int height;
+    int bits_per_pixel;
+    int line_length;
+    int endian;
+} t_texture;
 
 typedef struct s_player {
     float x;
@@ -78,6 +91,7 @@ typedef struct s_data {
     t_player player;
     int cell_size;
     int player_size;
+    t_texture wall_texture;
     struct timespec prev_time; // Add this line
 } t_data;
 

@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 22:06:48 by vkhrabro          #+#    #+#             */
-/*   Updated: 2024/06/14 23:27:49 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/20 22:33:28 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,20 @@ void draw_player(t_data *data, int x, int y, int size, int color) {
     draw_square(data, x - size / 2, y - size / 2, size, color);
 }
 
+void put_texture_pixel(t_data *data, int x, int y, int tex_x, int tex_y) {
+    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT && tex_x >= 0 && tex_x < data->wall_texture.width && tex_y >= 0 && tex_y < data->wall_texture.height) {
+        char *src = data->wall_texture.addr + (tex_y * data->wall_texture.line_length + tex_x * (data->wall_texture.bits_per_pixel / 8));
+        char *dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+        *(unsigned int*)dst = *(unsigned int*)src;
+    }
+}
+
 void render_map(t_data *data) {
+    int minimap_scale = 4; // Scale down the minimap by this factor
+    int minimap_cell_size = data->cell_size / minimap_scale;
+    int offset_x = 30; // Position from the left
+    int offset_y = WINDOW_HEIGHT - (data->map.map_height * minimap_cell_size) - 20; // Position from the bottom
+
     for (size_t i = 0; i < data->map.map_height; i++) {
         for (size_t j = 0; j < data->map.map_width; j++) {
             if (j < ft_strlen(data->map.map_data[i])) {
@@ -81,17 +94,16 @@ void render_map(t_data *data) {
                 } else if (data->map.map_data[i][j] == '0') {
                     color = EMPTY_COLOR;
                 } else if (ft_strchr("NSEW", data->map.map_data[i][j])) {
-                    // Set player initial position
                     data->player.x = j * data->cell_size + data->cell_size / 2;
                     data->player.y = i * data->cell_size + data->cell_size / 2;
-                    color = EMPTY_COLOR; // Set the cell to empty after placing the player
+                    color = EMPTY_COLOR;
                     if (data->map.map_data[i][j] == 'N') data->player.angle = 3 * PI / 2;
                     if (data->map.map_data[i][j] == 'S') data->player.angle = PI / 2;
                     if (data->map.map_data[i][j] == 'W') data->player.angle = PI;
                     if (data->map.map_data[i][j] == 'E') data->player.angle = 0;
-                    data->map.map_data[i][j] = '0'; // Clear the initial position marker
+                    data->map.map_data[i][j] = '0';
                 }
-                draw_square(data, j * data->cell_size, i * data->cell_size, data->cell_size, color);
+                draw_square(data, offset_x + j * minimap_cell_size, offset_y + i * minimap_cell_size, minimap_cell_size, color);
             }
         }
     }
@@ -127,6 +139,9 @@ void cast_ray(t_data *data) {
     int num_rays = 180; // Number of rays to cast
     double angle_step = fov / num_rays;
     double ray_angle;
+    int minimap_scale = 4;
+    int offset_x = 30;
+    int offset_y = WINDOW_HEIGHT - (data->map.map_height * (data->cell_size / minimap_scale)) - 20;
 
     for (int i = -num_rays / 2; i <= num_rays / 2; i++) {
         ray_angle = data->player.angle + i * angle_step;
@@ -136,8 +151,9 @@ void cast_ray(t_data *data) {
         double ray_dy = sin(ray_angle);
 
         int ray_length = data->player.ray_length;
+        int j;
 
-        for (int j = 0; j < ray_length; j++) {
+        for (j = 0; j < ray_length; j++) {
             ray_x += ray_dx;
             ray_y += ray_dy;
 
@@ -151,14 +167,88 @@ void cast_ray(t_data *data) {
 
             // Check if ray hits a wall
             if (data->map.map_data[map_y][map_x] == '1') {
-                draw_line(data, x0, y0, (int)ray_x, (int)ray_y, PLAYER_COLOR);
+                draw_line(data, x0 / minimap_scale + offset_x, y0 / minimap_scale + offset_y, (int)ray_x / minimap_scale + offset_x, (int)ray_y / minimap_scale + offset_y, PLAYER_COLOR);
                 break;
             }
         }
 
         // If no wall was hit, draw the ray to its maximum length
-        if (ray_x < x0 + ray_length * ray_dx && ray_y < y0 + ray_length * ray_dy) {
-            draw_line(data, x0, y0, (int)ray_x, (int)ray_y, PLAYER_COLOR);
+        if (j >= ray_length) {
+            draw_line(data, x0 / minimap_scale + offset_x, y0 / minimap_scale + offset_y, (int)ray_x / minimap_scale + offset_x, (int)ray_y / minimap_scale + offset_y, PLAYER_COLOR);
+        }
+    }
+}
+
+void render_3d_view(t_data *data) {
+    int width = WINDOW_WIDTH;
+    int height = WINDOW_HEIGHT;
+    double fov = 60.0 * PI / 180.0; // Field of view in radians
+    int num_rays = width; // One ray per column of the screen
+    double angle_step = fov / num_rays;
+    double start_angle = data->player.angle - fov / 2.0;
+    
+    double scale_factor = 80.0; // Scaling factor to make walls appear closer
+
+    // Fill the top half with the ceiling color
+    for (int y = 0; y < height / 2; y++) {
+        for (int x = 0; x < width; x++) {
+            put_pixel(data, x, y, CEILING_COLOR);
+        }
+    }
+
+    // Fill the bottom half with the floor color
+    for (int y = height / 2; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            put_pixel(data, x, y, FLOOR_COLOR);
+        }
+    }
+
+    // Render the walls
+    for (int x = 0; x < num_rays; x++) {
+        double ray_angle = start_angle + x * angle_step;
+        double ray_x = data->player.x;
+        double ray_y = data->player.y;
+        double ray_dx = cos(ray_angle);
+        double ray_dy = sin(ray_angle);
+
+        int hit = 0;
+        double distance = 0;
+        while (!hit) {
+            ray_x += ray_dx;
+            ray_y += ray_dy;
+            distance += 1.0;  // Track the distance the ray has traveled
+
+            int map_x = (int)(ray_x / data->cell_size);
+            int map_y = (int)(ray_y / data->cell_size);
+
+            // Check if ray is out of bounds
+            if (map_x < 0 || map_x >= (int)data->map.map_width || map_y < 0 || map_y >= (int)data->map.map_height) {
+                break;
+            }
+
+            // Check if ray hits a wall
+            if (data->map.map_data[map_y][map_x] == '1') {
+                hit = 1;
+                double corrected_distance = distance * cos(ray_angle - data->player.angle); // Correct the fish-eye effect
+                int wall_height = (int)((height / corrected_distance) * scale_factor);  // Calculate wall height with scaling factor
+
+                // Calculate the texture coordinate
+                double wall_hit_x = ray_x / data->cell_size - map_x;
+                int tex_x = (int)(wall_hit_x * data->wall_texture.width);
+
+                // Draw the wall slice with texture
+                int draw_start = -wall_height / 2 + height / 2;
+                int draw_end = wall_height / 2 + height / 2;
+                int tex_y_step = data->wall_texture.height / wall_height;
+
+                for (int y = draw_start; y < draw_end; y++) {
+                    if (y >= 0 && y < height) {
+                        int tex_y = (y - draw_start) * tex_y_step;
+                        put_texture_pixel(data, x, y, tex_x, tex_y);
+                    }
+                }
+                break;  // Ensure we exit after hitting a wall
+            }
         }
     }
 }
@@ -167,15 +257,21 @@ void cast_ray(t_data *data) {
 
 
 
+
+
 int render_background(t_data *data) {
+    // Clear the screen
     for (int y = 0; y < WINDOW_HEIGHT; y++) {
         for (int x = 0; x < WINDOW_WIDTH; x++) {
             put_pixel(data, x, y, GREY_COLOR);
         }
     }
-    render_map(data);
-    draw_player(data, data->player.x, data->player.y, data->player_size, PLAYER_COLOR);
-    cast_ray(data); // Adjust player size
+
+    render_3d_view(data); // Render the 3D view
+    render_map(data); // Render the minimap (keeping your existing minimap rendering code)
+    draw_player(data, data->player.x / 4 + 20, data->player.y / 4 + WINDOW_HEIGHT - (data->map.map_height * (data->cell_size / 4)) - 20, data->player_size / 4, PLAYER_COLOR); // Render the player on the minimap
+    // cast_ray(data); // Cast rays for the minimap
+
     mlx_put_image_to_window(data->mlx, data->window, data->image, 0, 0);
     return 0;
 }
@@ -184,66 +280,6 @@ int close_window(t_data *data) {
     mlx_destroy_window(data->mlx, data->window);
     exit(0);
 }
-
-// int key_hook(int keycode, t_data *data) {
-//     // printf("Key pressed: %d\n", keycode); // Debug print
-
-//     double move_step = data->cell_size / 1.5; // Dynamic move step, ensure it's a double
-//     double rot_step = PI / 10; // Rotation step
-
-//     // Save the original position
-//     int original_x = data->player.x;
-//     int original_y = data->player.y;
-
-//     if (keycode == 65307) // ESC key code on MacOS
-//         close_window(data);
-//     else if (keycode == 65361) // Left arrow key for rotation
-//         data->player.angle -= rot_step;
-//     else if (keycode == 65363) // Right arrow key for rotation
-//         data->player.angle += rot_step;
-//     else if (keycode == 65362 || keycode == 119) { // Up arrow key or 'w' key
-//         // Move forward
-//         data->player.x += (int)(move_step * cos(data->player.angle));
-//         data->player.y += (int)(move_step * sin(data->player.angle));
-//     } else if (keycode == 65364 || keycode == 115) { // Down arrow key or 's' key
-//         // Move backward
-//         data->player.x -= (int)(move_step * cos(data->player.angle));
-//         data->player.y -= (int)(move_step * sin(data->player.angle));
-//     } else if (keycode == 97) { // 'a' key for left strafe
-//         // Move left (strafe)
-//         data->player.x += (int)(move_step * cos(data->player.angle - PI / 2));
-//         data->player.y += (int)(move_step * sin(data->player.angle - PI / 2));
-//     } else if (keycode == 100) { // 'd' key for right strafe
-//         // Move right (strafe)
-//         data->player.x += (int)(move_step * cos(data->player.angle + PI / 2));
-//         data->player.y += (int)(move_step * sin(data->player.angle + PI / 2));
-//     }
-
-//     // Calculate the player's bounding box
-//     int half_size = data->player_size / 2;
-//     int left_x = (data->player.x - half_size) / data->cell_size;
-//     int right_x = (data->player.x + half_size) / data->cell_size;
-//     int top_y = (data->player.y - half_size) / data->cell_size;
-//     int bottom_y = (data->player.y + half_size) / data->cell_size;
-
-//     // Ensure the new position is not within a wall
-//     if (!(left_x >= 0 && right_x < (int)data->map.map_width &&
-//           top_y >= 0 && bottom_y < (int)data->map.map_height &&
-//           data->map.map_data[top_y][left_x] != '1' &&
-//           data->map.map_data[top_y][right_x] != '1' &&
-//           data->map.map_data[bottom_y][left_x] != '1' &&
-//           data->map.map_data[bottom_y][right_x] != '1')) {
-//         // Revert to original position if new position is invalid
-//         data->player.x = original_x;
-//         data->player.y = original_y;
-//     }
-
-//     // printf("Player position after move: (%d, %d)\n", data->player.x, data->player.y);
-
-//     // Re-render the background and map after moving the player
-//     render_background(data);
-//     return 0;
-// }
 
 int key_press(int keycode, t_data *data) {
     if (keycode == 65307) // ESC key code on MacOS
@@ -308,44 +344,32 @@ void update_player(t_data *data) {
         normalize_angle(&data->player.angle);
     }
 
-    // printf("Player angle: %.2f radians\n", data->player.angle);
-
     double cos_angle = cos(data->player.angle);
     double sin_angle = sin(data->player.angle);
 
-    // printf("cos(angle)=%.2f, sin(angle)=%.2f\n", cos_angle, sin_angle);
-
     if (data->player.move_forward) {
-        data->player.x += (int)move_speed * cos_angle;
-        data->player.y += (int)move_speed * sin_angle;
-        // printf("Moving forward: new x=%.2f, new y=%.2f\n", data->player.x, data->player.y);
+        data->player.x += move_speed * cos_angle;
+        data->player.y += move_speed * sin_angle;
     }
     if (data->player.move_backward) {
-        data->player.x -= (int)move_speed * cos_angle;
-        data->player.y -= (int)move_speed * sin_angle;
-        // printf("Moving backward: new x=%.2f, new y=%.2f\n", data->player.x, data->player.y);
+        data->player.x -= move_speed * cos_angle;
+        data->player.y -= move_speed * sin_angle;
     }
     if (data->player.strafe_left) {
-        data->player.x += (int)move_speed * cos(data->player.angle - PI / 2);
-        data->player.y += (int)move_speed * sin(data->player.angle - PI / 2);
-        // printf("Strafing left: new x=%.2f, new y=%.2f\n", data->player.x, data->player.y);
+        data->player.x += move_speed * cos(data->player.angle - PI / 2);
+        data->player.y += move_speed * sin(data->player.angle - PI / 2);
     }
     if (data->player.strafe_right) {
-        data->player.x += (int)move_speed * cos(data->player.angle + PI / 2);
-        data->player.y += (int)move_speed * sin(data->player.angle + PI / 2);
-        // printf("Strafing right: new x=%.2f, new y=%.2f\n", data->player.x, data->player.y);
+        data->player.x += move_speed * cos(data->player.angle + PI / 2);
+        data->player.y += move_speed * sin(data->player.angle + PI / 2);
     }
-
-    // printf("After movement: x=%.2f, y=%.2f\n", data->player.x, data->player.y);
 
     // Calculate the player's bounding box
     double half_size = data->player_size / 2.0;
-    int left_x = (int)((data->player.x - half_size) / data->cell_size);
-    int right_x = (int)((data->player.x + half_size) / data->cell_size);
-    int top_y = (int)((data->player.y - half_size) / data->cell_size);
-    int bottom_y = (int)((data->player.y + half_size) / data->cell_size);
-
-    // printf("Bounding box: left_x=%d, right_x=%d, top_y=%d, bottom_y=%d\n", left_x, right_x, top_y, bottom_y);
+    int left_x = ((data->player.x - half_size) / data->cell_size);
+    int right_x = ((data->player.x + half_size) / data->cell_size);
+    int top_y = ((data->player.y - half_size) / data->cell_size);
+    int bottom_y = ((data->player.y + half_size) / data->cell_size);
 
     // Ensure the new position is not within a wall
     if (left_x >= 0 && right_x < (int)data->map.map_width &&
@@ -355,20 +379,12 @@ void update_player(t_data *data) {
         data->map.map_data[bottom_y][left_x] != '1' &&
         data->map.map_data[bottom_y][right_x] != '1') {
         // New position is valid, nothing to revert
-        // printf("New position is valid.\n");
     } else {
         // Revert to original position if new position is invalid
         data->player.x = original_x;
         data->player.y = original_y;
-        // printf("Reverted to original position: x=%.2f, y=%.2f\n", original_x, original_y);
     }
-
-    // printf("Player final position: x=%.2f, y=%.2f\n", data->player.x, data->player.y);
 }
-
-
-
-
 
 int main_loop(t_data *data) {
     update_player(data);
@@ -410,13 +426,18 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    data.wall_texture.img = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/color_stone.xpm", &data.wall_texture.width, &data.wall_texture.height);
+    if (!data.wall_texture.img) {
+        fprintf(stderr, "Failed to load texture\n");
+        return EXIT_FAILURE;
+    }
+    data.wall_texture.addr = mlx_get_data_addr(data.wall_texture.img, &data.wall_texture.bits_per_pixel, &data.wall_texture.line_length, &data.wall_texture.endian);
     map_reading(&data.map);
-
     // Calculate the cell size based on the map and window dimensions
     int cell_size_width = WINDOW_WIDTH / data.map.map_width;
     int cell_size_height = WINDOW_HEIGHT / data.map.map_height;
     data.cell_size = (cell_size_width < cell_size_height) ? cell_size_width : cell_size_height;
-    data.player_size = data.cell_size / 3;
+    data.player_size = data.cell_size / 2;
     data.player.ray_length = data.cell_size * 100;
 
     // Initialize prev_time
@@ -435,6 +456,8 @@ int main() {
 
     return 0;
 }
+
+
 
 
 
