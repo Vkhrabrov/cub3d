@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/18 23:33:41 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/24 01:00:52 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,11 @@ typedef struct s_data {
     t_player player;
     int cell_size;
     int player_size;
-    t_texture wall_texture;
+    // t_texture wall_texture;
+    t_texture north_texture;
+    t_texture south_texture;
+    t_texture west_texture;
+    t_texture east_texture;
     struct timespec prev_time; // Add this line
 } t_data;
 

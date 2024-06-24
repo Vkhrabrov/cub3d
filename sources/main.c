@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 22:06:48 by vkhrabro          #+#    #+#             */
-/*   Updated: 2024/06/20 22:33:28 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/24 23:26:29 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,15 @@ void draw_player(t_data *data, int x, int y, int size, int color) {
     draw_square(data, x - size / 2, y - size / 2, size, color);
 }
 
-void put_texture_pixel(t_data *data, int x, int y, int tex_x, int tex_y) {
-    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT && tex_x >= 0 && tex_x < data->wall_texture.width && tex_y >= 0 && tex_y < data->wall_texture.height) {
-        char *src = data->wall_texture.addr + (tex_y * data->wall_texture.line_length + tex_x * (data->wall_texture.bits_per_pixel / 8));
+void put_texture_pixel(t_data *data, int x, int y, int tex_x, int tex_y, t_texture *texture) {
+    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT && tex_x >= 0 && tex_x < texture->width && tex_y >= 0 && tex_y < texture->height) {
+        char *src = texture->addr + (tex_y * texture->line_length + tex_x * (texture->bits_per_pixel / 8));
         char *dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
         *(unsigned int*)dst = *(unsigned int*)src;
     }
 }
+
+
 
 void render_map(t_data *data) {
     int minimap_scale = 4; // Scale down the minimap by this factor
@@ -132,6 +134,7 @@ void draw_line(t_data *data, int x0, int y0, int x1, int y1, int color) {
     }
 }
 
+
 void cast_ray(t_data *data) {
     int x0 = data->player.x;
     int y0 = data->player.y;
@@ -179,6 +182,8 @@ void cast_ray(t_data *data) {
     }
 }
 
+
+
 void render_3d_view(t_data *data) {
     int width = WINDOW_WIDTH;
     int height = WINDOW_HEIGHT;
@@ -186,8 +191,8 @@ void render_3d_view(t_data *data) {
     int num_rays = width; // One ray per column of the screen
     double angle_step = fov / num_rays;
     double start_angle = data->player.angle - fov / 2.0;
-    
-    double scale_factor = 80.0; // Scaling factor to make walls appear closer
+
+    // double scale_factor = 1.0; // Scaling factor to make walls appear closer
 
     // Fill the top half with the ceiling color
     for (int y = 0; y < height / 2; y++) {
@@ -216,7 +221,7 @@ void render_3d_view(t_data *data) {
         while (!hit) {
             ray_x += ray_dx;
             ray_y += ray_dy;
-            distance += 1.0;  // Track the distance the ray has traveled
+            distance += 0.015;  // Track the distance the ray has traveled
 
             int map_x = (int)(ray_x / data->cell_size);
             int map_y = (int)(ray_y / data->cell_size);
@@ -230,21 +235,43 @@ void render_3d_view(t_data *data) {
             if (data->map.map_data[map_y][map_x] == '1') {
                 hit = 1;
                 double corrected_distance = distance * cos(ray_angle - data->player.angle); // Correct the fish-eye effect
-                int wall_height = (int)((height / corrected_distance) * scale_factor);  // Calculate wall height with scaling factor
+                int wall_height = (int)((height / corrected_distance));  // Calculate wall height with scaling factor
+
+                // Determine the wall orientation and select the texture
+                t_texture *texture;
+                double x_hit_offset = ray_x / data->cell_size - map_x;
+                double y_hit_offset = ray_y / data->cell_size - map_y;
+
+                // Improved logic to select the correct texture
+                if (fabs(ray_dx) > fabs(ray_dy)) {
+                    if (ray_dx > 0) //&& y_hit_offset < 1 && y_hit_offset > 0)
+                     {
+                        texture = &data->east_texture;
+                    } else {
+                        texture = &data->west_texture;
+                    }
+                } else {
+                    if (ray_dy > 0){
+                     //&& x_hit_offset < 1 && x_hit_offset > 0) {
+                        texture = &data->south_texture;
+                    } else {
+                        texture = &data->north_texture;
+                    }
+                }
 
                 // Calculate the texture coordinate
-                double wall_hit_x = ray_x / data->cell_size - map_x;
-                int tex_x = (int)(wall_hit_x * data->wall_texture.width);
+                double wall_hit_x = (fabs(ray_dx) > fabs(ray_dy)) ? y_hit_offset : x_hit_offset;
+                int tex_x = (int)(wall_hit_x * texture->width);
 
                 // Draw the wall slice with texture
                 int draw_start = -wall_height / 2 + height / 2;
                 int draw_end = wall_height / 2 + height / 2;
-                int tex_y_step = data->wall_texture.height / wall_height;
+                double tex_y_step = (double)texture->height / wall_height;
 
                 for (int y = draw_start; y < draw_end; y++) {
                     if (y >= 0 && y < height) {
                         int tex_y = (y - draw_start) * tex_y_step;
-                        put_texture_pixel(data, x, y, tex_x, tex_y);
+                        put_texture_pixel(data, x, y, tex_x, tex_y, texture);
                     }
                 }
                 break;  // Ensure we exit after hitting a wall
@@ -256,17 +283,7 @@ void render_3d_view(t_data *data) {
 
 
 
-
-
-
 int render_background(t_data *data) {
-    // Clear the screen
-    for (int y = 0; y < WINDOW_HEIGHT; y++) {
-        for (int x = 0; x < WINDOW_WIDTH; x++) {
-            put_pixel(data, x, y, GREY_COLOR);
-        }
-    }
-
     render_3d_view(data); // Render the 3D view
     render_map(data); // Render the minimap (keeping your existing minimap rendering code)
     draw_player(data, data->player.x / 4 + 20, data->player.y / 4 + WINDOW_HEIGHT - (data->map.map_height * (data->cell_size / 4)) - 20, data->player_size / 4, PLAYER_COLOR); // Render the player on the minimap
@@ -426,13 +443,38 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    data.wall_texture.img = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/color_stone.xpm", &data.wall_texture.width, &data.wall_texture.height);
-    if (!data.wall_texture.img) {
-        fprintf(stderr, "Failed to load texture\n");
+    // Load textures using map struct
+    data.map.north_texture = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/color_stone.xpm", &data.north_texture.width, &data.north_texture.height);
+    if (!data.map.north_texture) {
+        fprintf(stderr, "Failed to load north texture\n");
         return EXIT_FAILURE;
     }
-    data.wall_texture.addr = mlx_get_data_addr(data.wall_texture.img, &data.wall_texture.bits_per_pixel, &data.wall_texture.line_length, &data.wall_texture.endian);
+    data.north_texture.addr = mlx_get_data_addr(data.map.north_texture, &data.north_texture.bits_per_pixel, &data.north_texture.line_length, &data.north_texture.endian);
+
+    data.map.south_texture = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/grey_stone.xpm", &data.south_texture.width, &data.south_texture.height);
+    if (!data.map.south_texture) {
+        fprintf(stderr, "Failed to load south texture\n");
+        return EXIT_FAILURE;
+    }
+    data.south_texture.addr = mlx_get_data_addr(data.map.south_texture, &data.south_texture.bits_per_pixel, &data.south_texture.line_length, &data.south_texture.endian);
+
+    data.map.west_texture = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/purple_stone.xpm", &data.west_texture.width, &data.west_texture.height);
+    if (!data.map.west_texture) {
+        fprintf(stderr, "Failed to load west texture\n");
+        return EXIT_FAILURE;
+    }
+    data.west_texture.addr = mlx_get_data_addr(data.map.west_texture, &data.west_texture.bits_per_pixel, &data.west_texture.line_length, &data.west_texture.endian);
+
+    data.map.east_texture = mlx_xpm_file_to_image(data.mlx, "/home/vkhrabro/Projects/cub3d_second/blue_stone.xpm", &data.east_texture.width, &data.east_texture.height);
+    if (!data.map.east_texture) {
+        fprintf(stderr, "Failed to load east texture\n");
+        return EXIT_FAILURE;
+    }
+    data.east_texture.addr = mlx_get_data_addr(data.map.east_texture, &data.east_texture.bits_per_pixel, &data.east_texture.line_length, &data.east_texture.endian);
+    
     map_reading(&data.map);
+    
+    
     // Calculate the cell size based on the map and window dimensions
     int cell_size_width = WINDOW_WIDTH / data.map.map_width;
     int cell_size_height = WINDOW_HEIGHT / data.map.map_height;
@@ -444,7 +486,6 @@ int main() {
     clock_gettime(CLOCK_MONOTONIC, &data.prev_time);
 
     render_background(&data);
-
     mlx_hook(data.window, 17, 0, close_window, &data);
     mlx_hook(data.window, 2, 1L<<0, key_press, &data); // Handle key press
     mlx_hook(data.window, 3, 1L<<1, key_release, &data); // Handle key release
