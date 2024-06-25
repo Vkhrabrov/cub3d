@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 22:06:48 by vkhrabro          #+#    #+#             */
-/*   Updated: 2024/06/24 23:26:29 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/06/25 23:57:41 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,112 +182,128 @@ void cast_ray(t_data *data) {
     }
 }
 
+// int is_vertical_hit(double ray_x, double ray_y, double ray_dx, double ray_dy, int cell_size) {
+//     double next_vertical_grid = (ray_dx > 0) ? ceil(ray_x / cell_size) * cell_size : floor(ray_x / cell_size) * cell_size;
+//     double next_horizontal_grid = (ray_dy > 0) ? ceil(ray_y / cell_size) * cell_size : floor(ray_y / cell_size) * cell_size;
 
+//     double vertical_distance = fabs((next_vertical_grid - ray_x) / ray_dx);
+//     double horizontal_distance = fabs((next_horizontal_grid - ray_y) / ray_dy);
+
+//     return vertical_distance < horizontal_distance ? 1 : 0; // 1 for vertical, 0 for horizontal
+// }
+
+int is_vertical_hit(double ray_dx, double ray_dy) {
+    return fabs(ray_dx) > fabs(ray_dy);
+}
 
 void render_3d_view(t_data *data) {
     int width = WINDOW_WIDTH;
     int height = WINDOW_HEIGHT;
-    double fov = 60.0 * PI / 180.0; // Field of view in radians
-    int num_rays = width; // One ray per column of the screen
-    double angle_step = fov / num_rays;
-    double start_angle = data->player.angle - fov / 2.0;
-
-    // double scale_factor = 1.0; // Scaling factor to make walls appear closer
-
-    // Fill the top half with the ceiling color
+    double fov = 60.0 * PI / 180.0;
+    int num_rays = width;
+    
+    // Fill ceiling and floor
     for (int y = 0; y < height / 2; y++) {
         for (int x = 0; x < width; x++) {
             put_pixel(data, x, y, CEILING_COLOR);
+            put_pixel(data, x, height - 1 - y, FLOOR_COLOR);
         }
     }
 
-    // Fill the bottom half with the floor color
-    for (int y = height / 2; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            put_pixel(data, x, y, FLOOR_COLOR);
-        }
-    }
-
-    // Render the walls
+    // Render walls
     for (int x = 0; x < num_rays; x++) {
-        double ray_angle = start_angle + x * angle_step;
-        double ray_x = data->player.x;
-        double ray_y = data->player.y;
-        double ray_dx = cos(ray_angle);
-        double ray_dy = sin(ray_angle);
+        double camera_x = 2 * x / (double)width - 1;
+        double ray_dir_x = cos(data->player.angle);
+        double ray_dir_y = sin(data->player.angle);
+        double plane_x = -sin(data->player.angle) * tan(fov / 2);
+        double plane_y = cos(data->player.angle) * tan(fov / 2);
+        
+        double ray_x = ray_dir_x + plane_x * camera_x;
+        double ray_y = ray_dir_y + plane_y * camera_x;
 
+        int map_x = (int)(data->player.x / data->cell_size);
+        int map_y = (int)(data->player.y / data->cell_size);
+
+        double side_dist_x, side_dist_y;
+        double delta_dist_x = fabs(1 / ray_x);
+        double delta_dist_y = fabs(1 / ray_y);
+        int step_x, step_y;
         int hit = 0;
-        double distance = 0;
-        while (!hit) {
-            ray_x += ray_dx;
-            ray_y += ray_dy;
-            distance += 0.015;  // Track the distance the ray has traveled
+        int side;
 
-            int map_x = (int)(ray_x / data->cell_size);
-            int map_y = (int)(ray_y / data->cell_size);
+        if (ray_x < 0) {
+            step_x = -1;
+            side_dist_x = (data->player.x / data->cell_size - map_x) * delta_dist_x;
+        } else {
+            step_x = 1;
+            side_dist_x = (map_x + 1.0 - data->player.x / data->cell_size) * delta_dist_x;
+        }
+        if (ray_y < 0) {
+            step_y = -1;
+            side_dist_y = (data->player.y / data->cell_size - map_y) * delta_dist_y;
+        } else {
+            step_y = 1;
+            side_dist_y = (map_y + 1.0 - data->player.y / data->cell_size) * delta_dist_y;
+        }
 
-            // Check if ray is out of bounds
-            if (map_x < 0 || map_x >= (int)data->map.map_width || map_y < 0 || map_y >= (int)data->map.map_height) {
-                break;
+        while (hit == 0) {
+            if (side_dist_x < side_dist_y) {
+                side_dist_x += delta_dist_x;
+                map_x += step_x;
+                side = 0;
+            } else {
+                side_dist_y += delta_dist_y;
+                map_y += step_y;
+                side = 1;
+            }
+            if (map_x < 0 || map_y < 0 || map_x >= (int)data->map.map_width || map_y >= (int)data->map.map_height) break;
+            if (data->map.map_data[map_y][map_x] == '1') hit = 1;
+        }
+
+        if (hit == 1) {
+            double perp_wall_dist;
+            if (side == 0) perp_wall_dist = (map_x - data->player.x / data->cell_size + (1 - step_x) / 2) / ray_x;
+            else           perp_wall_dist = (map_y - data->player.y / data->cell_size + (1 - step_y) / 2) / ray_y;
+
+            int line_height = (int)(height / perp_wall_dist);
+
+            int draw_start = -line_height / 2 + height / 2;
+            if (draw_start < 0) draw_start = 0;
+            int draw_end = line_height / 2 + height / 2;
+            if (draw_end >= height) draw_end = height - 1;
+
+            t_texture *texture;
+            if (side == 0) {
+                texture = (step_x > 0) ? &data->west_texture : &data->east_texture;
+            } else {
+                texture = (step_y > 0) ? &data->north_texture : &data->south_texture;
             }
 
-            // Check if ray hits a wall
-            if (data->map.map_data[map_y][map_x] == '1') {
-                hit = 1;
-                double corrected_distance = distance * cos(ray_angle - data->player.angle); // Correct the fish-eye effect
-                int wall_height = (int)((height / corrected_distance));  // Calculate wall height with scaling factor
+            double wall_x;
+            if (side == 0) wall_x = data->player.y / data->cell_size + perp_wall_dist * ray_y;
+            else           wall_x = data->player.x / data->cell_size + perp_wall_dist * ray_x;
+            wall_x -= floor(wall_x);
 
-                // Determine the wall orientation and select the texture
-                t_texture *texture;
-                double x_hit_offset = ray_x / data->cell_size - map_x;
-                double y_hit_offset = ray_y / data->cell_size - map_y;
+            int tex_x = (int)(wall_x * (double)texture->width);
+            if (side == 0 && ray_x > 0) tex_x = texture->width - tex_x - 1;
+            if (side == 1 && ray_y < 0) tex_x = texture->width - tex_x - 1;
 
-                // Improved logic to select the correct texture
-                if (fabs(ray_dx) > fabs(ray_dy)) {
-                    if (ray_dx > 0) //&& y_hit_offset < 1 && y_hit_offset > 0)
-                     {
-                        texture = &data->east_texture;
-                    } else {
-                        texture = &data->west_texture;
-                    }
-                } else {
-                    if (ray_dy > 0){
-                     //&& x_hit_offset < 1 && x_hit_offset > 0) {
-                        texture = &data->south_texture;
-                    } else {
-                        texture = &data->north_texture;
-                    }
-                }
-
-                // Calculate the texture coordinate
-                double wall_hit_x = (fabs(ray_dx) > fabs(ray_dy)) ? y_hit_offset : x_hit_offset;
-                int tex_x = (int)(wall_hit_x * texture->width);
-
-                // Draw the wall slice with texture
-                int draw_start = -wall_height / 2 + height / 2;
-                int draw_end = wall_height / 2 + height / 2;
-                double tex_y_step = (double)texture->height / wall_height;
-
-                for (int y = draw_start; y < draw_end; y++) {
-                    if (y >= 0 && y < height) {
-                        int tex_y = (y - draw_start) * tex_y_step;
-                        put_texture_pixel(data, x, y, tex_x, tex_y, texture);
-                    }
-                }
-                break;  // Ensure we exit after hitting a wall
+            double step = 1.0 * texture->height / line_height;
+            double tex_pos = (draw_start - height / 2 + line_height / 2) * step;
+            for (int y = draw_start; y < draw_end; y++) {
+                int tex_y = (int)tex_pos & (texture->height - 1);
+                tex_pos += step;
+                put_texture_pixel(data, x, y, tex_x, tex_y, texture);
             }
         }
     }
 }
 
-
-
-
 int render_background(t_data *data) {
     render_3d_view(data); // Render the 3D view
     render_map(data); // Render the minimap (keeping your existing minimap rendering code)
     draw_player(data, data->player.x / 4 + 20, data->player.y / 4 + WINDOW_HEIGHT - (data->map.map_height * (data->cell_size / 4)) - 20, data->player_size / 4, PLAYER_COLOR); // Render the player on the minimap
-    // cast_ray(data); // Cast rays for the minimap
+    cast_ray(data); // Cast rays for the minimap
 
     mlx_put_image_to_window(data->mlx, data->window, data->image, 0, 0);
     return 0;
