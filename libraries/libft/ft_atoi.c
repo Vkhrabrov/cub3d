@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 14:12:04 by ccarrace          #+#    #+#             */
-/*   Updated: 2023/09/25 23:06:37 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/05/28 19:57:20 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-#include <stdio.h>
-int	main(int argc, char **argv)
-{
-	if (argc == 2)
-		printf("double of %s is %d\n", argv[1], ft_atoi(argv[1]) * 2);
-	return (0);
-}
+// #include <stdio.h>
+// int	main(int argc, char **argv)
+// {
+// 	if (argc == 2)
+// 		printf("double of %s is %d\n", argv[1], ft_atoi(argv[1]) * 2);
+// 	return (0);
+// }
