@@ -53,7 +53,7 @@ typedef struct s_textures
     char	*south;
     char	*west;
     char	*east;
-	char	**paths_array[4];
+	char	**array[4];
 	char	*texture_ids[4];
 
     void *img;

@@ -1,7 +1,17 @@
-11111
-1   1
-1 N 1
-1   1
-11111
+NO ./textures/color_stone.xpm
+SO ./textures/grey_stone.xpm
+EA ./textures/blue_stone.xpm
+
+C 255,0,0
+WE ./textures/purple_stone.xpm
+
+F 255,255,255
+
+1111111
+1000001
+1000001
+1000001
+10000N1
+1111111
 
 

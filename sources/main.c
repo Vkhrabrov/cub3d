@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 19:59:38 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/02 01:17:19 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/06 02:00:55 by vadimhrabro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ result	check_args(int argc)
 {
     if (argc!= 2)
     {
-      printf("Error: Wrong arguments (usage: ./cub3d <path_to_file>)\n");
+      printf("Error\nWrong arguments (usage: ./cub3d <path_to_file>)\n");
       return (FAIL);
     }
 	return (SUCCESS);
 }
 
-void	init(char *file_name, t_data *data, t_textures *textures, t_colors *colors)
+void	init(char *file_name, t_data *data, t_textures *textures)
 {
     init_map(data, file_name);
     init_textures(textures);
-    init_colors(colors);	
+    init_colors(data);	
 }
 
 int	free_and_exit(t_textures *textures, t_map *map)
@@ -48,21 +48,20 @@ int	free_and_exit(t_textures *textures, t_map *map)
 
 int main(int argc, char **argv)
 {
-    // t_map		map;
+    t_map		map;
     t_textures	textures;
-    t_colors	colors;
 	t_data		data;
 
 	if (check_args(argc) == FAIL)
 		return (FAIL);
-	init(argv[1], &data, &textures, &colors);
+	init(argv[1], &data, &textures);
 	if (file_check(argv[1]) == FAIL || find_map_dimensions(&data) == FAIL
-	|| check_scene_description(&data) == FAIL || check_colors(&data, &colors) == FAIL)
+	|| check_scene_description(&data) == FAIL || check_colors(&data) == FAIL)
 		return (FAIL);
 	// print_map_array(map.array, map.height, map.width);
 
-printf("rgb(%d, %d, %d) is hex_floor %1x\n", colors.floor[0], colors.floor[1], colors.floor[2], colors.hex_floor);
-printf("rgb(%d, %d, %d) is hex_ceiling %1x\n", colors.ceiling[0], colors.ceiling[1], colors.ceiling[2], colors.hex_ceiling);	
+    printf("Ceiling Color: 0x%X\n", data.colors.hex_ceiling);
+    printf("Floor Color: 0x%X\n", data.colors.hex_floor);
 
 	if (check_textures(&data, &textures) == 	FAIL)
 	{	
@@ -79,12 +78,8 @@ printf("rgb(%d, %d, %d) is hex_ceiling %1x\n", colors.ceiling[0], colors.ceiling
 	if (check_walls(&data) == FAIL)
 		return (free_and_exit(&textures, &data.map));
 
-	// for (int i = 0; i < 4; i++)
-	// 	printf("%s = %s\n", textures.texture_ids[i], *(textures.paths_array[i]));
 
 	// engine_main(&data, &textures);
-
-
 
 	data.player.move_forward = 0;
     data.player.move_backward = 0;
@@ -106,28 +101,28 @@ printf("rgb(%d, %d, %d) is hex_ceiling %1x\n", colors.ceiling[0], colors.ceiling
     data.addr = mlx_get_data_addr(data.image, &data.bits_per_pixel, &data.line_length, &data.endian);
  
     // Load textures using map struct
-	data.north_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.paths_array[0]), &data.north_texture.width, &data.north_texture.height);
+	data.north_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.array[0]), &data.north_texture.width, &data.north_texture.height);
 	if (!data.north_texture.img) {
 		fprintf(stderr, "Failed to load north texture\n");
 		return EXIT_FAILURE;
 	}
 	data.north_texture.addr = mlx_get_data_addr(data.north_texture.img, &data.north_texture.bits_per_pixel, &data.north_texture.line_length, &data.north_texture.endian);
 
-    data.south_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.paths_array[1]), &data.south_texture.width, &data.south_texture.height);
+    data.south_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.array[1]), &data.south_texture.width, &data.south_texture.height);
     if (!data.south_texture.img) {
         fprintf(stderr, "Failed to load south texture\n");
         return EXIT_FAILURE;
     }
     data.south_texture.addr = mlx_get_data_addr(data.south_texture.img, &data.south_texture.bits_per_pixel, &data.south_texture.line_length, &data.south_texture.endian);
 
-    data.west_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.paths_array[3]), &data.west_texture.width, &data.west_texture.height);
+    data.west_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.array[3]), &data.west_texture.width, &data.west_texture.height);
     if (!data.west_texture.img) {
         fprintf(stderr, "Failed to load west texture\n");
         return EXIT_FAILURE;
     }
     data.west_texture.addr = mlx_get_data_addr(data.west_texture.img, &data.west_texture.bits_per_pixel, &data.west_texture.line_length, &data.west_texture.endian);
 
-    data.east_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.paths_array[2]), &data.east_texture.width, &data.east_texture.height);
+    data.east_texture.img = mlx_xpm_file_to_image(data.mlx, *(textures.array[2]), &data.east_texture.width, &data.east_texture.height);
     if (!data.east_texture.img) {
         fprintf(stderr, "Failed to load east texture\n");
         return EXIT_FAILURE;
@@ -142,6 +137,18 @@ printf("rgb(%d, %d, %d) is hex_ceiling %1x\n", colors.ceiling[0], colors.ceiling
     data.player_size = data.cell_size / 2;
     data.player.ray_length = data.cell_size * 100;
 
+// printf("map.height = %ld\n", map.height);
+// printf("map.width =%ld\n", map.width);
+// printf("data.map.height = %ld\n", data.map.height);
+// printf("data.map.width = %ld\n", data.map.width);
+// printf("map.player_x = %ld\n", map.player_x);
+// printf("map.player_y = %ld\n", map.player_y);
+// printf("data.map.player_x = %ld\n", data.map.player_x);
+// printf("data.map.player_y = %ld\n", data.map.player_y);
+// printf("data.cell_size = %d\n", data.cell_size);
+// printf("data.player.x = %f\n", data.player.x);
+// printf("data.player.y = %f\n", data.player.y);
+
     // Initialize prev_time
     // clock_gettime(CLOCK_MONOTONIC, &data.prev_time);
 	
@@ -155,9 +162,6 @@ printf("rgb(%d, %d, %d) is hex_ceiling %1x\n", colors.ceiling[0], colors.ceiling
     mlx_loop_hook(data.mlx, main_loop, &data); // Main loop
 
     mlx_loop(data.mlx);
-
-
-
 
 	free_array(data.map.array, data.map.height);
 	free_array(data.map.visited_array, (data.map.height + 2));

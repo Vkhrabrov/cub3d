@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:58:55 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/30 20:57:08 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:05:55 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ boolean all_chars_are_valid(t_data *data)
     i = 0;
 	if (data->map.array == NULL)
 	{
-		printf("Error: Map or map array is NULL\n");
+		printf("Error\nMap or map array is NULL\n");
         return (FALSE);
 	}
     while (i < data->map.height)
@@ -90,7 +90,7 @@ int player_count(t_data *data)
 	player_counter = 0;
 	if (data->map.array == NULL)
 	{
-		printf("Error: Map or map array is NULL\n");
+		printf("Error\nMap or map array is NULL\n");
         return (0);
 	}
     while (data->map.i < data->map.height)
@@ -120,28 +120,28 @@ result check_player(t_data *data)
 
     if (all_chars_are_valid(data) == FALSE)
 	{
-		printf("Error: Map contains invalid characters\n");
+		printf("Error\nMap: Contains invalid characters\n");
 		return (FAIL);
 	}
     nbr_players = player_count(data);
     if (nbr_players == -1)
 	{
-		printf("Error: Player cannot be placed in a map edge\n");
+		printf("Error\nPlayer: Cannot be placed in a map edge\n");
 		return (FAIL);
 	}
     if (nbr_players == 0) //|| (is_player_on_edge(map) == TRUE)) 
 	{
-		printf("Error: No player found inside the map\n");
+		printf("Error\nPlayer: Not found\n");
 		return (FAIL);
 	}
     if (nbr_players > 1)
 	{
-		printf("Error: The map contains more than one player\n");
+		printf("Error\nPlayer: More than one player found\n");
 		return (FAIL);
 	}
 	// if (is_player_on_edge(map) == TRUE)
 	// {
-	// 	printf("Error: Player is not inside the map\n");
+	// 	printf("Error\nPlayer is not inside the map\n");
 	// 	return (FAIL);
 	// }
     return (SUCCESS);

@@ -6,7 +6,7 @@
 #    By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/07/03 01:31:29 by vadimhrabro      ###   ########.fr        #
+#    Updated: 2024/07/05 22:00:26 by vadimhrabro      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ NAME			=		cub3D
 
 # --- Compiler flags --------------------------------------------------------- #
 
-CFLAGS			=		-MMD -Wall -Wextra -Werror -g
+CFLAGS			=		-MMD #-Wall -Wextra -Werror -g
 LIBMLX_FLAGS	=		-lmlx -framework OpenGL -framework AppKit
 # LIBMLX_FLAGS 	=		-lmlx -lX11 -lXext -lm -lbsd
 

@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 12:05:56 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/30 21:04:31 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:17:27 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	allocate_map_array(t_data *data)
 	data->map.array = malloc((data->map.height) * sizeof(char *));
 	if (!data->map.array)
 	{
-		printf("Error: could not allocate memory for map\n");
+		printf("Error\nMalloc: Could not allocate memory for map\n");
 		return ;
 	}
 	i = 0;
@@ -28,7 +28,7 @@ static void	allocate_map_array(t_data *data)
 		data->map.array[i] = malloc((data->map.width + 1) * sizeof(char));
 		if (!data->map.array[i])
 		{
-			printf("Error: could not allocate memory for map\n");
+			printf("Error\nMalloc: Could not allocate memory for map\n");
 			return ;
 		}
 		i++;
@@ -94,7 +94,7 @@ void	allocate_visited_array(t_data *data)
 	data->map.visited_array = malloc((data->map.height + 2) * sizeof(char *));
 	if (!data->map.visited_array)
 	{
-		printf("Error: could not allocate memory for visited_map\n");
+		printf("Error\nMalloc: Could not allocate memory for visited_map\n");
 		return ;
 	}
 	i = 0;
@@ -103,7 +103,7 @@ void	allocate_visited_array(t_data *data)
         data->map.visited_array[i] = malloc((data->map.width + 2) * sizeof(char));
         if (!data->map.visited_array[i])
 		{
-			printf("Error: could not allocate memory for visited_map\n");
+			printf("Error\nMalloc: Could not allocate memory for visited_map\n");
             while (i > 0)
                 free(data->map.visited_array[--i]);
             free(data->map.visited_array);

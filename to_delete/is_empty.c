@@ -16,18 +16,17 @@ int is_empty(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
-		printf("Error: could not open the file\n");
+		printf("Error\nOpen: Could not open '%s'\n", file);
 		return (-1);
 	}
 	line = get_next_line(fd);
 	if (!line)
 	{
-		printf("Error: file is empty\n");
+		printf("Error\nOpen: File is empty\n");
 		close(fd);
 		return (1);
 	}
 	free(line);
-	printf("File is NOT empty\n");
 	return (0);
 }
 

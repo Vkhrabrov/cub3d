@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:33:05 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/23 22:36:44 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:05:43 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ boolean is_directory(char *str)
 	fd = open(str, O_DIRECTORY);
 	if (fd < 0)
 		return (FALSE);
-	printf("Error: '%s' is a directory, not a file\n", str);
+	printf("Error\nOpen: '%s' is a directory, not a file\n", str);
 	close(fd);
     return (TRUE);
 }
@@ -31,7 +31,7 @@ boolean can_open_file(char *str)
 	fd = open(str, O_RDONLY);
 	if (fd < 0)
 	{
-		printf("Error: '%s': Could not open the file\n", str);
+		printf("Error\nOpen: Could not open '%s'\n", str);
 		return (FALSE);
 	}
 	close(fd);
@@ -46,7 +46,7 @@ result	file_check(char *file_name)
 		return (FAIL);
 	if (!is_file_type_valid(file_name, ".cub"))
 	{
-		printf("Error: Wrong file type (must be .cub)\n");
+		printf("Error\nWrong file type (must be .cub)\n");
 		return (FAIL);
 	}
 	return (SUCCESS);

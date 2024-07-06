@@ -6,16 +6,42 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 19:47:31 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/30 20:48:22 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/02 12:36:37 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+// static result	find_map_starting_line(t_data *data)
+// {
+// 	int		fd;
+// 	char	*line;
+
+// 	fd = open_file(data->map.file);
+// 	if (fd < 0)
+// 		return (FAIL);
+// 	line = get_next_line(fd);
+// 	while (line != NULL)
+// 	{
+// 		if (((line[0] != ' ' && line[0] != '1') || (line[0] == ' '
+// 			&& ft_strchr(line, '1') == NULL)) && data->map.height == 0)
+// 			++data->map.starting_line;
+// 		else
+// 			break ;
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	read_until_end_of_file(fd, &line);
+// 	free(line);
+// 	close(fd);
+// 	return (SUCCESS);
+// }
+
 static result	find_map_starting_line(t_data *data)
 {
 	int		fd;
 	char	*line;
+	int		i;
 
 	fd = open_file(data->map.file);
 	if (fd < 0)
@@ -23,19 +49,19 @@ static result	find_map_starting_line(t_data *data)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		if (((line[0] != ' ' && line[0] != '1') || (line[0] == ' '
-			&& ft_strchr(line, '1') == NULL)) && data->map.height == 0)
+		// if (((line[0] != ' ' && line[0] != '1') || (line[0] == ' '
+		// 	&& ft_strchr(line, '1') == NULL)) && data->map.height == 0)
+		i = 0;
+		while (is_whitespace(line[i]))
+			i++;
+		if (line[i] != '0' && line[i] != '1')
 			++data->map.starting_line;
 		else
 			break ;
 		free(line);
 		line = get_next_line(fd);
 	}
-	while (line != NULL)
-	{
-		free(line);
-		line = get_next_line(fd);
-	}
+	read_until_end_of_file(fd, &line);
 	free(line);
 	close(fd);
 	return (SUCCESS);

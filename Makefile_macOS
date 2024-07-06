@@ -6,7 +6,7 @@
 #    By: ccarrace <ccarrace@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/06/25 17:02:40 by ccarrace         ###   ########.fr        #
+#    Updated: 2024/07/03 12:04:01 by ccarrace         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ OBJ_FILES 		= 		$(SRC_FILES:.c=.o)
 DEP_FILES 		= 		$(SRC_FILES:.c=.d)
 SRC_FILES		=		main.c \
 						init/init.c \
+						engine.c \
 						parse/check_file.c \
 						parse/find_map_dimensions.c \
 						parse/check_scene_description.c \

@@ -6,7 +6,7 @@
 /*   By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/03 01:17:05 by vadimhrabro      ###   ########.fr       */
+/*   Updated: 2024/07/06 02:23:27 by vadimhrabro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ typedef enum
 # define YELLOW "\033[1;93m"	//	bold bright yellow
 # define RESET "\x1B[0m"   // resets all terminal attributes to default settings
 
-#define WINDOW_WIDTH 2048
-#define WINDOW_HEIGHT 1536
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
+// #define WINDOW_WIDTH 1024
+// #define WINDOW_HEIGHT 768
 #define GREY_COLOR 0x808080
 #define PLAYER_COLOR 0xFF0000 // Red color for the player
 // #define PLAYER_SIZE 8  // Half-size of the player square
@@ -58,8 +60,10 @@ typedef enum
 #define BLUE_COLOR 0x0000FF
 #define EMPTY_COLOR 0x000000 // Black color for empty space
 #define PI 3.14159265359
-#define CEILING_COLOR 0x87CEEB // Light blue color for ceiling
-#define FLOOR_COLOR 0x8B4513 // Brown color for floor
+#define CEILING_COLOR 0x87CEEB // Light blue color for ceiling (135,206,235)
+#define FLOOR_COLOR 0x8B4513 // Brown color for floor (139,69,19)
+
+#define MINIMAP_SCALE 4
 // #define DEFAULT_CELL_SIZE 20 // Default size of each cell in the map
 
 /* --- Data structures ------------------------------------------------------ */
@@ -91,7 +95,7 @@ typedef struct s_map
 	size_t		player_x;
 	size_t		player_y;
 	char		player_orientation;
-	bool		closed;
+	// bool		closed;
 	size_t		new_x;
 	size_t		new_y;
 
@@ -112,7 +116,7 @@ typedef struct s_textures
     char	*south;
     char	*west;
     char	*east;
-	char	**paths_array[4];
+	char	**array[4];
 	char	*texture_ids[4];
 
     void *img;
@@ -147,6 +151,7 @@ typedef struct s_data {
     int endian;
     t_map map;
     t_player player;
+    t_colors colors;
     int cell_size;
     int player_size;
     // t_texture wall_texture;
@@ -159,12 +164,15 @@ typedef struct s_data {
     int offset_x;
     int offset_y;
     struct timespec prev_time; // Add this line
+
+	int	minimap_x;
+	int	minimap_y;
 } t_data;
 
 /* === Functions ============================================================ */
 
 //	main.c
-int 	engine_main(t_data *data, t_textures *textures);
+// int 	engine_main(t_data *data, t_textures *textures);
 int		main(int argc, char **argv);
 
 /* --- Init ----------------------------------------------------------------- */
@@ -172,7 +180,7 @@ int		main(int argc, char **argv);
 //	init.c
 void	init_map(t_data *data, char *map_file);
 void  	init_textures(t_textures *textures);
-void  	init_colors(t_colors *colors);
+void  	init_colors(t_data *data);
 
 /* --- Parse ---------------------------------------------------------------- */
 
@@ -191,7 +199,7 @@ result	check_scene_description(t_data *data);
 result	check_textures(t_data *data, t_textures *textures);
 
 //	check_colors.c
-result	check_colors(t_data *data, t_colors *colors);
+result	check_colors(t_data *data);
 
 //	check_player.c
 boolean all_chars_are_valid(t_data *data);

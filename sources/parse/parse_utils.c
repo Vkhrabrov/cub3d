@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 19:30:37 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/23 13:33:54 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:18:36 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ size_t	find_file_length(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
-		printf("Error: could not open the file\n");
+		printf("Error\nOpen: Could not open '%s'\n", file);
 		return (-1);
 	}
 	len = 0;

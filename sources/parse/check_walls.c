@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 14:03:41 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/01 20:02:45 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:17:26 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ result	check_walls(t_data *data)
 	if (is_map_closed(data) == FALSE)
 	{
 		printf(RED " \u2718 " RESET);
-		printf("Error: Map is not closed\n");
+		printf("Error\nMap: Is not closed\n");
 		printf(RED "Map is not valid\n" RESET);
 		return (FAIL);
 	}

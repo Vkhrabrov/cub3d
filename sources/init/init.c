@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:02:33 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/30 20:37:58 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/06 01:50:31 by vadimhrabro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	init_map(t_data *data, char *map_file)
 	data->map.visited_array = NULL;
 	data->map.player_x = 0;
 	data->map.player_y = 0;
-	data->map.closed = true;
+	// data->map.closed = true;
 	data->map.new_x = 0;
 	data->map.new_y = 0;
 }
@@ -42,18 +42,20 @@ void  init_textures(t_textures *textures)
 	textures->texture_ids[1] = "SO";
 	textures->texture_ids[2] = "EA";
 	textures->texture_ids[3] = "WE";
-	textures->paths_array[0] = &textures->north;
-	textures->paths_array[1] = &textures->south;
-	textures->paths_array[2] = &textures->east;
-	textures->paths_array[3] = &textures->west;	
+	textures->array[0] = &textures->north;
+	textures->array[1] = &textures->south;
+	textures->array[2] = &textures->east;
+	textures->array[3] = &textures->west;	
 }
 
-void  init_colors(t_colors *colors)
+void  init_colors(t_data *data)
 {
-  colors->floor[0] = -1;
-  colors->floor[1] = -1;
-  colors->floor[2] = -1;
-  colors->ceiling[0] = -1; 
-  colors->ceiling[1] = -1;
-  colors->ceiling[2] = -1;
+  data->colors.floor[0] = -1;
+  data->colors.floor[1] = -1;
+  data->colors.floor[2] = -1;
+  data->colors.ceiling[0] = -1; 
+  data->colors.ceiling[1] = -1;
+  data->colors.ceiling[2] = -1;
+  data->colors.hex_floor = 0x0;
+  data->colors.hex_ceiling = 0x0;
 }

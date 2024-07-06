@@ -77,7 +77,7 @@ int main(void)
 	//	adjacent to other visited cells or walls ('@', '1'), never to 
 	//	a whitespace)
 	if (!is_closed(map_array, map_height, map_width))
-		printf("Error: Map is not closed\n");
+		printf("Error\nMap: Is not closed\n");
 	else
 		printf("Map is closed!\n");
 

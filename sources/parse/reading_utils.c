@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reading_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 13:55:28 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/25 13:05:24 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/03 20:13:40 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int open_file(const char *file_path)
 	
 	fd = open(file_path, O_RDONLY);
     if (fd < 0)
-        printf("Error: '%s': Could not open the file\n", file_path);
+        printf("Error\nOpen: Could not open '%s'\n", file_path);
     return fd;
 }
 
