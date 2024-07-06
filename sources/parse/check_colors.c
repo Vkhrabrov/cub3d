@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_colors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 19:28:00 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/06 02:01:13 by vadimhrabro      ###   ########.fr       */
+/*   Updated: 2024/07/06 21:06:02 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,3 +188,4 @@ result	check_colors(t_data *data)
 		return (FAIL);
 	return (SUCCESS);
 }
+

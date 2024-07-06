@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 21:01:10 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/24 20:23:18 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/06 20:16:47 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,3 +45,61 @@ void	print_map_array(char **array, size_t height, size_t width)
 // 		i++;
 // 	}
 // }
+
+void	debug_x_collision(t_data *data, double new_x, double new_y)
+{
+	int	half_size;
+	
+	half_size = data->player_size / 2;
+	if (is_wall(data, new_x - half_size, data->player.y))
+	{
+		printf("cell size   = %d\n", data->cell_size);
+		printf("player size = %d\n", data->player_size);
+		printf("player new position = (%f, %f)\n", new_x, new_y);
+		printf("player south edge   = (%f, %f)\n", new_x, new_y + half_size);
+		printf("player north edge   = (%f, %f)\n", new_x, new_y - half_size);
+		printf("player east edge    = (%f, %f)\n", new_x - half_size, new_y);
+		printf("player west edge    = (%f, %f)\n", new_x + half_size, new_y);
+		printf(" --> east wall collision at  %f\n\n", new_x - half_size);
+	}
+    else if (is_wall(data, new_x + half_size, data->player.y))
+	{
+		printf("cell size   = %d\n", data->cell_size);
+		printf("player size = %d\n", data->player_size);
+		printf("player new position = (%f, %f)\n", new_x, new_y);
+		printf("player south edge   = (%f, %f)\n", new_x, new_y + half_size);
+		printf("player north edge   = (%f, %f)\n", new_x, new_y - half_size);
+		printf("player east edge    = (%f, %f)\n", new_x - half_size, new_y);
+		printf("player west edge    = (%f, %f)\n", new_x + half_size, new_y);
+		printf(" --> west wall collision at  %f\n\n", new_x + half_size);
+	}
+}
+
+void	debug_y_collision(t_data *data, double new_x, double new_y)
+{
+	int	half_size;
+	
+	half_size = data->player_size / 2;
+	if (is_wall(data, data->player.x, new_y + half_size))
+	{
+		printf("cell size   = %d\n", data->cell_size);
+		printf("player size = %d\n", data->player_size);
+		printf("player_position_update = (%f, %f)\n", new_x, new_y);
+		printf("player_south_boundary  = (%f, %f)\n", new_x, new_y + (data->player_size / 2));
+		printf("player_north_boundary  = (%f, %f)\n", new_x, new_y - (data->player_size / 2));
+		printf("player_east_boundary   = (%f, %f)\n", new_x - (data->player_size / 2), new_y);
+		printf("player_west_boundary   = (%f, %f)\n", new_x + (data->player_size / 2), new_y);
+		printf(" --> south wall collision at %f\n\n", new_y + half_size);
+	}
+	else if (is_wall(data, data->player.x, new_y - half_size))
+	{
+		printf("cell size   = %d\n", data->cell_size);
+		printf("player size = %d\n", data->player_size);
+		printf("player_position_update = (%f, %f)\n", new_x, new_y);
+		printf("player_south_boundary  = (%f, %f)\n", new_x, new_y + (data->player_size / 2));
+		printf("player_north_boundary  = (%f, %f)\n", new_x, new_y - (data->player_size / 2));
+		printf("player_east_boundary   = (%f, %f)\n", new_x - (data->player_size / 2), new_y);
+		printf("player_west_boundary   = (%f, %f)\n", new_x + (data->player_size / 2), new_y);
+		printf(" --> north wall collision at %f\n\n", new_y - half_size);
+	}
+}

@@ -3,10 +3,10 @@ NO ./textures/color_stone.xpm
 SO ./textures/purple_stone.xpm
 EA ./textures/grey_stone.xpm
 
-C 135,206,235
+C 255,255,255
 WE ./textures/blue_stone.xpm
 
-F 139,69,19
+F 255,0,0
 
         
         111111111111111111111111

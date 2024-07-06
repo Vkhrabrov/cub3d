@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vadimhrabrov <vadimhrabrov@student.42.f    +#+  +:+       +#+        */
+/*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/06 02:23:27 by vadimhrabro      ###   ########.fr       */
+/*   Updated: 2024/07/06 22:11:07 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,10 @@ typedef enum
 # define YELLOW "\033[1;93m"	//	bold bright yellow
 # define RESET "\x1B[0m"   // resets all terminal attributes to default settings
 
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
+#define WINDOW_WIDTH 2048
+#define WINDOW_HEIGHT 1536
 // #define WINDOW_WIDTH 1024
 // #define WINDOW_HEIGHT 768
-#define GREY_COLOR 0x808080
 #define PLAYER_COLOR 0xFF0000 // Red color for the player
 // #define PLAYER_SIZE 8  // Half-size of the player square
 #define MOVE_STEP WINDOW_WIDTH/100 // Step size for player movement
@@ -62,6 +61,7 @@ typedef enum
 #define PI 3.14159265359
 #define CEILING_COLOR 0x87CEEB // Light blue color for ceiling (135,206,235)
 #define FLOOR_COLOR 0x8B4513 // Brown color for floor (139,69,19)
+#define INITIAL_ANGLE (PI / 2)
 
 #define MINIMAP_SCALE 4
 // #define DEFAULT_CELL_SIZE 20 // Default size of each cell in the map
@@ -151,7 +151,6 @@ typedef struct s_data {
     int endian;
     t_map map;
     t_player player;
-    t_colors colors;
     int cell_size;
     int player_size;
     // t_texture wall_texture;
@@ -159,11 +158,8 @@ typedef struct s_data {
     t_textures south_texture;
     t_textures west_texture;
     t_textures east_texture;
-    int minimap_scale;
-    int minimap_cell_size;
-    int offset_x;
-    int offset_y;
     struct timespec prev_time; // Add this line
+	t_colors colors;
 
 	int	minimap_x;
 	int	minimap_y;
@@ -235,9 +231,14 @@ int 	open_file(const char *file_path);
 void	read_until_line(int fd, char **line, int endline_index);
 void	read_until_end_of_file(int fd, char **line);
 
+/* --- ?????? ------------------------------------------------------ */
+int		is_wall(t_data *data, double x, double y);
+
 /* --- Debug ------------------------------------------------------- */
 
 //	debug.c
 void	print_map_array(char **array, size_t height, size_t width);
+void	debug_x_collision(t_data *data, double new_x, double new_y);
+void	debug_y_collision(t_data *data, double new_x, double new_y);
 
 #endif
