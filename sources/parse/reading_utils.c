@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 13:55:28 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/03 20:13:40 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 13:55:45 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,41 +17,38 @@
 
 #include "cub3d.h"
 
-int open_file(const char *file_path)
+int	open_file(const char *file_path)
 {
-    int fd;
-	
+	int	fd;
+
 	fd = open(file_path, O_RDONLY);
-    if (fd < 0)
-        printf("Error\nOpen: Could not open '%s'\n", file_path);
-    return fd;
+	if (fd < 0)
+		printf("Error\nOpen: Could not open '%s'\n", file_path);
+	return (fd);
 }
 
-
-void read_until_line(int fd, char **line, int target_line)
+void	read_until_line(int fd, char **line, int target_line)
 {
-    int i;
-	
+	int	i;
+
 	i = 0;
 	while (i < target_line && *line != NULL)
-    {
-        // free(*line);
-        // *line = get_next_line(fd);
-        // i++;
+	{
 		i++;
 		if (i < target_line)
 		{
 			free(*line);
 			*line = get_next_line(fd);
 		}
-    }
+	}
 }
 
-void read_until_end_of_file(int fd, char **line)
+void	read_until_end_of_file(int fd, char **line)
 {
-    while (*line != NULL)
-    {
-        free(*line);
-        *line = get_next_line(fd);
-    }
+	while (*line != NULL)
+	{
+		free(*line);
+		*line = get_next_line(fd);
+		close(fd);
+	}
 }

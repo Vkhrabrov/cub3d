@@ -78,12 +78,12 @@ char	*mlx_int_static_line(char **xpm_data,int *pos,int size)
 
 int	mlx_int_get_col_name(char *str,int size)
 {
-  int	result;
+  int	t_result;
 
-  result = 0;
+  t_result = 0;
   while (size--)
-    result = (result<<8)+*(str++);
-  return (result);
+    t_result = (t_result<<8)+*(str++);
+  return (t_result);
 }
 
 int	mlx_int_get_text_rgb(char *name, char *end)

@@ -6,13 +6,13 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 23:04:37 by ccarrace          #+#    #+#             */
-/*   Updated: 2023/09/25 23:22:04 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* DESCRIPTION
  * Applies the function 'f' to each character of the string 's', and passing its
- * index as first argument to crate a new string (with malloc) resulting from
+ * index as first argument to crate a new string (with malloc) t_resulting from
  * successive applications of 'f'.
  *
  * PARAMETERS

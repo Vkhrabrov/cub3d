@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:02:33 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/06 21:09:33 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 14:17:36 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	init_map(t_data *data, char *map_file)
 	data->map.j = 0;
 	data->map.visited_height = 0;
 	data->map.visited_width = 0;
-	data->map.visited_array = NULL;
+	data->map.visited = NULL;
 	data->map.player_x = 0;
 	data->map.player_y = 0;
 	// data->map.closed = true;
@@ -50,12 +50,12 @@ void  init_textures(t_textures *textures)
 
 void  init_colors(t_data *data)
 {
-  data->colors.floor[0] = -1;
-  data->colors.floor[1] = -1;
-  data->colors.floor[2] = -1;
-  data->colors.ceiling[0] = -1; 
-  data->colors.ceiling[1] = -1;
-  data->colors.ceiling[2] = -1;
-  data->colors.hex_floor = 0x0;
-  data->colors.hex_ceiling = 0x0;
+	data->colors.floor[0] = -1;
+	data->colors.floor[1] = -1;
+	data->colors.floor[2] = -1;
+	data->colors.ceiling[0] = -1; 
+	data->colors.ceiling[1] = -1;
+	data->colors.ceiling[2] = -1;
+	data->colors.hex_floor = 0x0;
+	data->colors.hex_ceiling = 0x0;
 }

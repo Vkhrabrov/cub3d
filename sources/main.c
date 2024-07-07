@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 19:59:38 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/06 22:50:24 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int key_release(int keycode, t_data *data);
 int main_loop(t_data *data);
 int render_background(t_data *data);
 
-result	check_args(int argc)
+t_result	check_args(int argc)
 {
     if (argc!= 2)
     {
@@ -37,12 +37,28 @@ void	init(char *file_name, t_data *data, t_textures *textures)
 
 int	free_all(t_textures *textures, t_map *map)
 {
-	free(textures->north);
-	free(textures->south);
-	free(textures->west);
-	free(textures->east);
-	free_array(map->array, map->height);
-	free_array(map->visited_array, (map->height + 2));
+	int	i;
+
+	i = 0;
+	if (textures->array != NULL)
+	{
+		while (i < 4)
+		{
+			if (*(textures->array[i]) != NULL)
+			{
+				free(*(textures->array[i]));
+				*(textures->array[i]) =  NULL;
+			}
+			i++;
+		}
+	}
+	if (map != NULL)
+	{
+		free_array(map->array, map->height);
+		map->array = NULL;
+		free_array(map->visited, (map->height + 2));
+		map->visited = NULL;
+	}
 	return (0);
 }
 
@@ -60,7 +76,7 @@ void initialize_game_data(t_data *data)
     data->player.strafe_right = 0;
 
     data->mlx = mlx_init();
-    data->window = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Grey Background");
+    data->window = mlx_new_window(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D");
     data->image = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
     data->addr = mlx_get_data_addr(data->image, &data->bits_per_pixel, &data->line_length, &data->endian);
 }
@@ -122,8 +138,11 @@ int texture_load_first(t_data *data, t_textures *textures)
     return 0;
 }
 
-int initial_checks(t_data *data, t_textures *textures, int argc, char **argv)
+t_result	initial_checks(t_data *data, t_textures *textures, int argc, char **argv)
 {
+	int cell_size_width;
+	int cell_size_height;
+
     if (check_args(argc) == FAIL)
 		return (FAIL);
     initialize_game_data(data);
@@ -138,12 +157,12 @@ int initial_checks(t_data *data, t_textures *textures, int argc, char **argv)
 		return (free_all(textures, &data->map));
     if (texture_load_first(data, textures) != 0)
         return EXIT_FAILURE;
-    int cell_size_width = WINDOW_WIDTH / data->map.width;
-    int cell_size_height = WINDOW_HEIGHT / data->map.height;
-    data->cell_size = (cell_size_width < cell_size_height) ? cell_size_width : cell_size_height;
+    cell_size_width = WINDOW_WIDTH / data->map.width;
+    cell_size_height = WINDOW_HEIGHT / data->map.height;
+    data->cell_size = find_min(cell_size_width, cell_size_height);
     data->player_size = data->cell_size / 2;
     data->player.ray_length = data->cell_size * 100;
-    return (0);
+    return (SUCCESS);
 }
 
 int main(int argc, char **argv)
@@ -151,8 +170,8 @@ int main(int argc, char **argv)
     t_textures	textures;
 	t_data		data;
 
-    if (initial_checks(&data, &textures, argc, argv) != 0)
-        return (FAIL);
+    if (initial_checks(&data, &textures, argc, argv) == FAIL)
+        exit (1);
     render_background(&data);
     mlx_hook(data.window, 17, 0, close_window, &data);
     mlx_hook(data.window, 2, 1L<<0, key_press, &data); // Handle key press
@@ -160,6 +179,6 @@ int main(int argc, char **argv)
     mlx_loop_hook(data.mlx, main_loop, &data); // Main loop
     mlx_loop(data.mlx);
 	free_array(data.map.array, data.map.height);
-	free_array(data.map.visited_array, (data.map.height + 2));
+	free_array(data.map.visited, (data.map.height + 2));
     return (0);
 }

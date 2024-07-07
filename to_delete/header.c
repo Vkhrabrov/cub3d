@@ -29,7 +29,7 @@ typedef struct s_map
 	char		**array;
 	size_t		i;
 	size_t		j;
-	char		**visited_array;
+	char		**visited;
 	size_t		visited_height;
 	size_t		visited_width;
 	size_t		player_x;

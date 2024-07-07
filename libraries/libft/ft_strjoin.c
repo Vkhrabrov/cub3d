@@ -6,12 +6,12 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/04 23:53:43 by ccarrace          #+#    #+#             */
-/*   Updated: 2023/09/09 00:32:50 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* DESCRIPTION
- * Allocates and returns a new string, which is the result of the concatenation
+ * Allocates and returns a new string, which is the t_result of the concatenation
  * of 's1' and 's2'.
  *
  * EXTERNAL FUNCTIONS

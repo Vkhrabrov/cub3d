@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+         #
+#    By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/07/06 21:28:45 by vkhrabro         ###   ########.fr        #
+#    Updated: 2024/07/07 14:24:13 by ccarrace         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ NAME			=		cub3D
 
 # --- Compiler flags --------------------------------------------------------- #
 
-CFLAGS			=		-MMD -Wall -Wextra -Werror -g
+CFLAGS			=		-MMD -Wall -Wextra -Werror -g #-fsanitize=address 
 #LIBMLX_FLAGS	=		-lmlx -framework OpenGL -framework AppKit
 LIBMLX_FLAGS 	=		-lmlx -lX11 -lXext -lm -lbsd
 
@@ -48,13 +48,18 @@ SRC_FILES		=		main.c \
 						parse/check_file.c \
 						parse/find_map_dimensions.c \
 						parse/check_scene_description.c \
+						parse/check_scene_description2.c \
 						parse/check_textures.c \
+						parse/check_textures2.c \
 						parse/check_colors.c \
 						parse/check_player.c \
 						parse/create_arrays.c \
+						parse/create_arrays2.c \
 						parse/check_walls.c \
+						parse/check_walls2.c \
 						parse/parse_utils.c \
 						parse/parse_utils2.c \
+						parse/parse_utils3.c \
 						parse/reading_utils.c \
 						debug.c
 

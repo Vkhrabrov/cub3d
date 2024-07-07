@@ -1,4 +1,4 @@
-static result	find_map_starting_line(t_data *data)
+static t_result	find_map_starting_line(t_data *data)
 {
 	int		fd;
 	char	*line;

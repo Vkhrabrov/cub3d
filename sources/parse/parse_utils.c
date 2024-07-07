@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 19:30:37 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/03 20:18:36 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 13:48:06 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,16 @@ void	free_array(char **array, size_t height)
 {
 	size_t	i;
 
+	if (array == NULL)
+		return ;
 	i = 0;
 	while (i < height)
 	{
-		free(array[i]);
+		if (array[i] != NULL)
+		{
+			free(array[i]);
+			array[i] = NULL;
+		}
 		i++;
 	}
 	free(array);
@@ -54,17 +60,17 @@ void	free_rgb_values(char **rgb_array)
 	free(rgb_array);
 }
 
-int is_valid_number(const char *str)
+int	is_valid_number(const char *str)
 {
-    if (*str == '\0')
-        return (0);
-    while (*str)
-    {
-        if (!ft_isdigit((unsigned char)*str) && *str != '\n')
-            return (0);
-        str++;
-    }
-    return (1);
+	if (*str == '\0')
+		return (0);
+	while (*str)
+	{
+		if (!ft_isdigit((unsigned char)*str) && *str != '\n')
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
 size_t	find_file_length(char *file)

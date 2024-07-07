@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcel>       +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 22:46:35 by ccarrace          #+#    #+#             */
-/*   Updated: 2022/07/03 23:15:58 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* DESCRIPTION
  * Iterates the list 'lst' and applies the function 'f' on the content of each
- * node. Creates a new list resulting of the successive applications of the
+ * node. Creates a new list t_resulting of the successive applications of the
  * function 'f'. The 'del' function is used to delete the content of a node if
  * needed.
  *
@@ -29,7 +29,7 @@
  *
  * COMMENTS
  * Cannot pass here a function 'f(lst->content)' as a parameter to another 
- * function 'ft_lstnew()'. Solved storing first function's result in a
+ * function 'ft_lstnew()'. Solved storing first function's t_result in a
  * temporary void function (tmp) and passing it as a parameter to the second
  * function.
  */

@@ -70,7 +70,7 @@ void trim_and_reduce_spaces(char *str) {
         }
     }
 
-    // Step 6: Copy result back to original string
+    // Step 6: Copy t_result back to original string
     strcpy(str, dst);
     free(dst);
 }

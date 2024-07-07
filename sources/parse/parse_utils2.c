@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 11:30:25 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/06/24 13:55:00 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 13:51:54 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_whitespace(char c)
  *	
  *	Removes all leading and trailing whitespaces
  */
-void	trim_endings(char **src)
+static void	trim_endings(char **src)
 {
 	char	*end;
 
@@ -54,7 +54,7 @@ void	trim_endings(char **src)
  *	Removes absolutely all whitespaces around the commas, leaving no
  *	space between them and the adjacent words.	
  */
-void	remove_spaces_around_comma(char **src, char **dst, int *space_found)
+static void	remove_spaces_around_comma(char **src, char **dst, int *space_found)
 {
 	if (*dst != *src && is_whitespace(*(*dst - 1)))
 		(*dst)--;
@@ -67,12 +67,12 @@ void	remove_spaces_around_comma(char **src, char **dst, int *space_found)
 }
 
 /*
- *	reduce_spaces()
+ *	reduce_spaces_in_between()
  *
  *	Reduces all whitespaces between words to just one single space,
  *	but when a comma is found, all whitespaces around are removed
  * */
-void	reduce_spaces_in_between(char *src, char *dst)
+static void	reduce_spaces_in_between(char *src, char *dst)
 {
 	int	space_found;
 
@@ -131,16 +131,3 @@ void	trim_and_reduce_spaces(char *line)
 	ft_strlcpy(line, dst, len + 1);
 	free(dst);
 }
-
-// int main() {
-//     char str1[] = "  	NO	  		 	./textures/test/north.xpm 	  \n";
-//     printf("Original: '%s'\n", str1);
-//     trim_and_reduce_spaces(str1);
-//     printf("Processed: '%s'\n", str1);
-
-//     char str2[] = "		  Color 	 	255 	  ,  32	, 	 213	 \n";
-//     printf("Original: '%s'\n", str2);
-//     trim_and_reduce_spaces(str2);
-//     printf("Processed: '%s'\n", str2);
-//     return 0;
-// }

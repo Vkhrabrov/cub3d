@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcel>       +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 19:07:46 by ccarrace          #+#    #+#             */
-/*   Updated: 2022/06/29 22:27:42 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
  *
  * DESCRIPTION
  * Copies up to 'dstsize - 1' characters from the string 'src' to 'dst',
- * NUL-terminating the result if 'dstsize' is not 0.
+ * NUL-terminating the t_result if 'dstsize' is not 0.
  * If the 'src' and 'dst' strings overlap. the behaviour is undefined.
  *
  * RETURN VALUES

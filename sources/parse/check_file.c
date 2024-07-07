@@ -6,25 +6,25 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:33:05 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/03 20:05:43 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-boolean is_directory(char *str)
+t_boolean	is_directory(char *str)
 {
-    int fd;
+	int	fd;
 
 	fd = open(str, O_DIRECTORY);
 	if (fd < 0)
 		return (FALSE);
 	printf("Error\nOpen: '%s' is a directory, not a file\n", str);
 	close(fd);
-    return (TRUE);
+	return (TRUE);
 }
 
-boolean can_open_file(char *str)
+t_boolean	can_open_file(char *str)
 {
 	int	fd;
 
@@ -38,11 +38,11 @@ boolean can_open_file(char *str)
 	return (TRUE);
 }
 
-result	file_check(char *file_name)
+t_result	file_check(char *file_name)
 {
 	if (is_directory(file_name) == TRUE)
 		return (FAIL);
-	if (can_open_file(file_name)== FALSE)
+	if (can_open_file(file_name) == FALSE)
 		return (FAIL);
 	if (!is_file_type_valid(file_name, ".cub"))
 	{

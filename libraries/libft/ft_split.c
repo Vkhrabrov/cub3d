@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcel>       +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 00:03:33 by ccarrace          #+#    #+#             */
-/*   Updated: 2022/07/03 22:44:09 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * malloc(), free()
  *
  * RETURN VALUES
- * The array of new strings resulting from the split or NULL if allocation fails
+ * The array of new strings t_resulting from the split or NULL if allocation fails
  * 
  * COMMENTS
  * 1. Create a function to count the number of words contained in the string

@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_arrays.c                                    :+:      :+:    :+:   */
+/*   parse_utils3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 12:05:56 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Created: 2024/07/06 22:43:07 by ccarrace          #+#    #+#             */
+/*   Updated: 2024/07/07 13:52:18 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
-
-t_result	create_arrays(t_data *data)
+unsigned int	rgb_to_hex(int *rgb_array)
 {
-	allocate_map_array(data);
-	if (fill_map_array(data) == FAIL)
-		return (FAIL);
-	allocate_visited(data);
-	fill_visited(data);
-	return (SUCCESS);
+	return (((rgb_array[0] & 0xFF) << 16)
+		| ((rgb_array[1] & 0xFF) << 8)
+		| (rgb_array[2] & 0xFF));
+}
+
+int	find_min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
 }
