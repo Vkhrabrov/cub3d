@@ -6,7 +6,7 @@
 #    By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/07/08 20:46:12 by vkhrabro         ###   ########.fr        #
+#    Updated: 2024/07/08 21:26:46 by vkhrabro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ OBJ_FILES 		= 		$(SRC_FILES:.c=.o)
 DEP_FILES 		= 		$(SRC_FILES:.c=.d)
 SRC_FILES		=		main.c \
 						init/init.c \
-						engine.c \
+						engine/engine.c \
 						parse/check_file.c \
 						parse/find_map_dimensions.c \
 						parse/check_scene_description.c \
@@ -61,10 +61,10 @@ SRC_FILES		=		main.c \
 						parse/parse_utils2.c \
 						parse/parse_utils3.c \
 						parse/reading_utils.c \
-						debug.c player_move_2.c \
-						player_move.c drawing.c \
-						data_initiations.c render.c \
-						walls_render.c
+						debug.c engine/player_move_2.c \
+						engine/player_move.c engine/drawing.c \
+						engine/data_initiations.c engine/render.c \
+						engine/walls_render.c
 
 # --- Files full paths ------------------------------------------------------- #
 
@@ -76,7 +76,7 @@ DEP_PATH		=		$(addprefix $(DEP_DIR), $(DEP_FILES))
 # --- Compilation rules ------------------------------------------------------ #
 
 all:
-		mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parse $(OBJ_DIR)/init
+		mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parse $(OBJ_DIR)/init $(OBJ_DIR)/engine
 		$(MAKE) -C $(LIBFT_DIR)
 		$(MAKE) -C $(LIBMLX_DIR)
 		$(MAKE) $(NAME)
