@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+         #
+#    By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/07/07 14:24:13 by ccarrace         ###   ########.fr        #
+#    Updated: 2024/07/08 20:46:12 by vkhrabro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,10 @@ SRC_FILES		=		main.c \
 						parse/parse_utils2.c \
 						parse/parse_utils3.c \
 						parse/reading_utils.c \
-						debug.c
+						debug.c player_move_2.c \
+						player_move.c drawing.c \
+						data_initiations.c render.c \
+						walls_render.c
 
 # --- Files full paths ------------------------------------------------------- #
 

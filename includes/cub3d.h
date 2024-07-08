@@ -6,7 +6,7 @@
 /*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 22:40:46 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/07/08 21:13:52 by vkhrabro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,45 @@ typedef struct s_map
 	t_colors	ceiling_color;
 }	t_map;
 
+typedef struct s_moves {
+    double delta_time;
+    double move_speed;
+    double rot_speed;
+    double cos_angle;
+    double sin_angle;
+    double new_x;
+    double new_y;
+    double half_size;
+} t_moves;
+
+typedef struct s_render {
+    double fov;
+    double camera_x;
+    double ray_dir_x;
+    double ray_dir_y;
+    double plane_x;
+    double plane_y;
+    double ray_x;
+    double ray_y;
+    int map_x;
+    int map_y;
+    double side_dist_x;
+    double side_dist_y;
+    double d_dist_x;
+    double d_dist_y;
+    int step_x;
+    int step_y;
+    int hit;
+    int side;
+    double perp_wall_dist;
+    int line_height;
+    int draw_start;
+    int draw_end;
+    double wall_x;
+    double step;
+    double tex_pos;
+} t_render;
+
 typedef struct s_textures
 {
 	char	*north;
@@ -139,9 +178,12 @@ typedef struct s_data
 	int				endian;
 	int i;
 	int j;
+	int color;
 	int minimap_cell_size;
 	t_map			map;
 	t_player		player;
+	t_render 		render;
+	t_moves			moves;
 	int				cell_size;
 	int				player_size;
 	t_textures		north_texture;
@@ -163,8 +205,8 @@ typedef struct s_data
 int				main(int argc, char **argv);
 
 //	debug.c
-void			print_map_by_lines(char **array, size_t height, size_t width);
-void			print_map_by_chars(char **array, size_t height, size_t width);
+// void			print_map_by_lines(char **array, size_t height, size_t width);
+// void			print_map_by_chars(char **array, size_t height, size_t width);
 void			debug_x_collision(t_data *data, double new_x, double new_y);
 void			debug_y_collision(t_data *data, double new_x, double new_y);
 
@@ -248,7 +290,44 @@ int				open_file(const char *file_path);
 void			read_until_line(int fd, char **line, int endline_index);
 void			read_until_end_of_file(int fd, char **line);
 
+// player_move.c
+void			rotate_player(t_data *data);
+void			move_player(t_data *data);
+void			strafe_player(t_data *data);
+void			update_player_x(t_data *data);
+void			update_player_y(t_data *data);
+void			update_player(t_data *data);
+
 /* --- ?????? --------------------------------------------------------------- */
 int				is_wall(t_data *data, double x, double y);
+void			normalize_angle(double *angle);
+void			init_player(t_data *data);
+void			init_minimap(t_data *data);
+void			calculate_ray(t_data *data, int x);
+void			init_player_movement(t_data *data);
+void			render_background_colors(t_data *data);
+void			render_map(t_data *data);
+void			render_map_row(t_data *data);
+int				render_background(t_data *data);
+void			render_3d_view(t_data *data);
+void			cast_ray(t_data *data);
+int				close_window(t_data *data);
+	// walls
+void			render_wall(t_data *data, int x);
+void			draw_textured_wall(t_data *data, int x);
+void			select_texture(t_data *data);
+void			process_map_cell(t_data *data);
+void			calculate_wall_distance(t_data *data);
+	// drawing
+void			put_pixel(t_data *data, int x, int y, unsigned int color);
+void			draw_square(t_data *data, int x, int y, int color);
+void			draw_player(t_data *data, int x, int y, int size);
+void			put_texture_pixel(t_data *data, int x, int y);
+void			draw_map_square(t_data *data, int is_wall);
+	// move
+int				key_press(int keycode, t_data *data);
+int				key_release(int keycode, t_data *data);
+void			normalize_angle(double *angle);
+
 
 #endif
