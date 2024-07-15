@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 13:55:28 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 13:55:45 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:30:33 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,13 @@ void	read_until_line(int fd, char **line, int target_line)
 	}
 }
 
-void	read_until_end_of_file(int fd, char **line)
+t_result	read_until_end_of_file(int fd, char **line, t_result res)
 {
 	while (*line != NULL)
 	{
 		free(*line);
 		*line = get_next_line(fd);
-		close(fd);
 	}
+	close(fd);
+	return (res);
 }

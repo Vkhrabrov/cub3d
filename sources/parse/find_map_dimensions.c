@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 19:47:31 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/11 00:16:42 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ static t_result	find_map_starting_line(t_data *data)
 		free(line);
 		line = get_next_line(fd);
 	}
-	read_until_end_of_file(fd, &line);
-	return (SUCCESS);
+	return (read_until_end_of_file(fd, &line, SUCCESS));
 }
 
 static t_result	find_map_height(t_data *data)
@@ -59,8 +58,7 @@ static t_result	find_map_height(t_data *data)
 		free(line);
 		line = get_next_line(fd);
 	}
-	read_until_end_of_file(fd, &line);
-	return (SUCCESS);
+	return (read_until_end_of_file(fd, &line, SUCCESS));
 }
 
 static t_result	find_map_width(t_data *data)
@@ -92,11 +90,17 @@ static t_result	find_map_width(t_data *data)
 	return (SUCCESS);
 }
 
+static void	find_map_ending_line(t_data *data)
+{
+	data->map.ending_line = data->map.starting_line + data->map.height;
+}
+
 t_result	find_map_dimensions(t_data *data)
 {
 	if (find_map_starting_line(data) == FAIL
 		|| find_map_width(data) == FAIL
 		|| find_map_height(data) == FAIL)
 		return (FAIL);
+	find_map_ending_line(data);
 	return (SUCCESS);
 }

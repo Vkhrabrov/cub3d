@@ -1,16 +1,16 @@
-NO textures/simonkraft/wet_sponge.xpm
-SO textures/simonkraft/wet_sponge.xpm
-WE textures/simonkraft/wet_sponge.xpm
-EA textures/simonkraft/wet_sponge.xpm
+NO ./textures/neon_cyan.xpm
+SO ./textures/neon_green.xpm
+EA ./textures/neon_magenta.xpm
+WE ./textures/neon_yellow.xpm
 
-F 164,169,20
-C 153,204,255
+C 0,0,0
+F 0,0,0
 
 111111111111111111111
 101000001000000000001
 101010101011111110001
 100010100010000010001
-111110101111101011101
+111110101111011011101
 100000101000101000001
 101111101011101111111
 101000001010100000101
@@ -26,5 +26,8 @@ C 153,204,255
 100010000000000010001
 101010111011111111101
 1N1000001000000000001
-111111111111111111111
-
+111111111111111110001
+                10001
+                10001
+                10001
+                11111

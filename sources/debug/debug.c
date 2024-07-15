@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 21:01:10 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/08 18:55:36 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:02:50 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	print_map_by_lines(char **array, size_t height, size_t width)
 {
-	(void)width;
 	size_t	i;
 
+	(void)width;
 	i = 0;
 	while (i < height)
 	{
@@ -47,7 +47,7 @@ void	print_map_by_chars(char **array, size_t height, size_t width)
 void	debug_x_collision(t_data *data, double new_x, double new_y)
 {
 	int	half_size;
-	
+
 	half_size = data->player_size / 2;
 	if (is_wall(data, new_x - half_size, data->player.y))
 	{
@@ -60,7 +60,7 @@ void	debug_x_collision(t_data *data, double new_x, double new_y)
 		printf("player west edge    = (%f, %f)\n", new_x + half_size, new_y);
 		printf(" --> east wall collision at  %f\n\n", new_x - half_size);
 	}
-    else if (is_wall(data, new_x + half_size, data->player.y))
+	else if (is_wall(data, new_x + half_size, data->player.y))
 	{
 		printf("cell size   = %d\n", data->cell_size);
 		printf("player size = %d\n", data->player_size);
@@ -76,7 +76,7 @@ void	debug_x_collision(t_data *data, double new_x, double new_y)
 void	debug_y_collision(t_data *data, double new_x, double new_y)
 {
 	int	half_size;
-	
+
 	half_size = data->player_size / 2;
 	if (is_wall(data, data->player.x, new_y + half_size))
 	{

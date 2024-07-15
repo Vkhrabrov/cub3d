@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/04 23:53:43 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:46:24 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
  *	{
  *		char	*newstr;
  *
- *  	newstr = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+ *  	newstr = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
  *		if (!s1 || !s2 || !newstr)
  *			return (NULL);
  *		ft_strlcpy(newstr, s1, ft_strlen(s1) + 1);

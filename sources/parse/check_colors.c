@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 19:28:00 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:52:57 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_boolean	are_colors_defined(int *color_found)
 	else if (*color_found == 3)
 		return (TRUE);
 	else
-		printf("Error\nColors: Only two colors needed\n");
+		printf("Error\nColors: More than two found\n");
 	return (FALSE);
 }
 
@@ -45,8 +45,7 @@ static t_boolean	rgb_triplet_is_valid(char **rgb_array, int *color)
 	{
 		if (!(is_valid_number(rgb_array[i])))
 		{
-			printf("Error\nColor: ");
-			printf("Negative value or non-numeric characters found\n");
+			printf("Error\nColor: Values must be numeric and positive\n");
 			return (FALSE);
 		}
 		color[i] = ft_atoi(rgb_array[i]);
@@ -128,9 +127,9 @@ t_result	check_colors(t_data *data)
 	{
 		trim_and_reduce_spaces(line);
 		original_line = line;
-		if ((*line == 'F' || *line == 'C')
+		if ((*line == 'F' || *line == 'C') && line[1] == ' '
 			&& (process_color_line(data, line, &colors_found) == FAIL))
-			return (FAIL);
+			return (read_until_end_of_file(fd, &original_line, FAIL));
 		free(original_line);
 		line = get_next_line(fd);
 	}

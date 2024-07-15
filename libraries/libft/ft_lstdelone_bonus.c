@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcel>       +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 22:51:29 by ccarrace          #+#    #+#             */
-/*   Updated: 2022/07/03 22:50:29 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:41:54 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 		del(lst->content);
 		free(lst);
 		lst = NULL;
-	}	
+	}
 }

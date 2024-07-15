@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:58:55 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:34:02 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_result	check_player(t_data *data)
 	nbr_players = player_count(data);
 	if (nbr_players == -1)
 	{
-		printf("Error\nPlayer: Cannot be placed in a map edge\n");
+		printf("Error\nPlayer: Must be placed within the walls\n");
 		return (FAIL);
 	}
 	if (nbr_players == 0)

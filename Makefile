@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+         #
+#    By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 21:20:12 by ccarrace          #+#    #+#              #
-#    Updated: 2024/07/08 21:26:46 by vkhrabro         ###   ########.fr        #
+#    Updated: 2024/07/08 22:50:33 by ccarrace         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,6 @@ OBJ_FILES 		= 		$(SRC_FILES:.c=.o)
 DEP_FILES 		= 		$(SRC_FILES:.c=.d)
 SRC_FILES		=		main.c \
 						init/init.c \
-						engine/engine.c \
 						parse/check_file.c \
 						parse/find_map_dimensions.c \
 						parse/check_scene_description.c \
@@ -56,14 +55,18 @@ SRC_FILES		=		main.c \
 						parse/create_arrays.c \
 						parse/create_arrays2.c \
 						parse/check_walls.c \
-						parse/check_walls2.c \
 						parse/parse_utils.c \
 						parse/parse_utils2.c \
 						parse/parse_utils3.c \
 						parse/reading_utils.c \
-						debug.c engine/player_move_2.c \
-						engine/player_move.c engine/drawing.c \
-						engine/data_initiations.c engine/render.c \
+						debug/debug.c \
+						debug/print_visited_map.c \
+						engine/player_move_2.c \
+						engine/player_move.c \
+						engine/drawing.c \
+						engine/data_initiations.c \
+						engine/render.c \
+						engine/engine.c \
 						engine/walls_render.c
 
 # --- Files full paths ------------------------------------------------------- #
@@ -76,7 +79,7 @@ DEP_PATH		=		$(addprefix $(DEP_DIR), $(DEP_FILES))
 # --- Compilation rules ------------------------------------------------------ #
 
 all:
-		mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parse $(OBJ_DIR)/init $(OBJ_DIR)/engine
+		mkdir -p $(OBJ_DIR) $(OBJ_DIR)/parse $(OBJ_DIR)/init $(OBJ_DIR)/debug $(OBJ_DIR)/engine
 		$(MAKE) -C $(LIBFT_DIR)
 		$(MAKE) -C $(LIBMLX_DIR)
 		$(MAKE) $(NAME)
@@ -93,7 +96,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 
 clean:	
 			rm -f $(OBJ_PATH) $(DEP_PATH)
-			rm -rf $(OBJ_DIR)c
+			rm -rf $(OBJ_DIR)
 			$(MAKE) -C $(LIBFT_DIR) clean
 			$(MAKE) -C $(LIBMLX_DIR) clean
 

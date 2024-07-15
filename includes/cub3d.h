@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkhrabro <vkhrabro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 21:19:54 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/08 21:13:52 by vkhrabro         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:47:39 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,16 @@
 
 # define WINDOW_WIDTH 2048
 # define WINDOW_HEIGHT 1536
-// #define WINDOW_WIDTH 1024
-// #define WINDOW_HEIGHT 768
 # define GREY_COLOR 0x808080
 # define PLAYER_COLOR 0xFF0000 // Red color for the player
-# define MOVE_STEP WINDOW_WIDTH / 100 // Step size for player movement
 # define WALL_COLOR 0xFFFFFF // White color for walls
 # define BLUE_COLOR 0x0000FF
 # define EMPTY_COLOR 0x000000 // Black color for empty space
 # define PI 3.14159265359
 # define CEILING_COLOR 0x87CEEB // Light blue color for ceiling (135,206,235)
 # define FLOOR_COLOR 0x8B4513 // Brown color for floor (139,69,19)
-# define INITIAL_ANGLE PI / 2
 # define MINIMAP_SCALE 4
+# define DEBUG_MODE 0
 
 /* --- Enum definitions ----------------------------------------------------- */
 
@@ -97,44 +94,46 @@ typedef struct s_map
 	t_colors	ceiling_color;
 }	t_map;
 
-typedef struct s_moves {
-    double delta_time;
-    double move_speed;
-    double rot_speed;
-    double cos_angle;
-    double sin_angle;
-    double new_x;
-    double new_y;
-    double half_size;
-} t_moves;
+typedef struct s_moves
+{
+	double		delta_time;
+	double		move_speed;
+	double		rot_speed;
+	double		cos_angle;
+	double		sin_angle;
+	double		new_x;
+	double		new_y;
+	double		half_size;
+}	t_moves;
 
-typedef struct s_render {
-    double fov;
-    double camera_x;
-    double ray_dir_x;
-    double ray_dir_y;
-    double plane_x;
-    double plane_y;
-    double ray_x;
-    double ray_y;
-    int map_x;
-    int map_y;
-    double side_dist_x;
-    double side_dist_y;
-    double d_dist_x;
-    double d_dist_y;
-    int step_x;
-    int step_y;
-    int hit;
-    int side;
-    double perp_wall_dist;
-    int line_height;
-    int draw_start;
-    int draw_end;
-    double wall_x;
-    double step;
-    double tex_pos;
-} t_render;
+typedef struct s_render
+{
+	double		fov;
+	double		camera_x;
+	double		ray_dir_x;
+	double		ray_dir_y;
+	double		plane_x;
+	double		plane_y;
+	double		ray_x;
+	double		ray_y;
+	int			map_x;
+	int			map_y;
+	double		side_dist_x;
+	double		side_dist_y;
+	double		d_dist_x;
+	double		d_dist_y;
+	int			step_x;
+	int			step_y;
+	int			hit;
+	int			side;
+	double		perp_wall_dist;
+	int			line_height;
+	int			draw_start;
+	int			draw_end;
+	double		wall_x;
+	double		step;
+	double		tex_pos;
+}	t_render;
 
 typedef struct s_textures
 {
@@ -176,13 +175,13 @@ typedef struct s_data
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
-	int i;
-	int j;
-	int color;
-	int minimap_cell_size;
+	int				i;
+	int				j;
+	int				color;
+	int				minimap_cell_size;
 	t_map			map;
 	t_player		player;
-	t_render 		render;
+	t_render		render;
 	t_moves			moves;
 	int				cell_size;
 	int				player_size;
@@ -190,25 +189,24 @@ typedef struct s_data
 	t_textures		south_texture;
 	t_textures		west_texture;
 	t_textures		east_texture;
-	t_textures 		texture;
+	t_textures		texture;
 	struct timespec	prev_time;
 	t_colors		colors;
 	int				minimap_x;
 	int				minimap_y;
-	int tex_x;
-	int tex_y;
+	int				tex_x;
+	int				tex_y;
 }	t_data;
 
 /* === Functions ============================================================ */
 
 //	main.c
 int				main(int argc, char **argv);
-
-//	debug.c
-// void			print_map_by_lines(char **array, size_t height, size_t width);
-// void			print_map_by_chars(char **array, size_t height, size_t width);
-void			debug_x_collision(t_data *data, double new_x, double new_y);
-void			debug_y_collision(t_data *data, double new_x, double new_y);
+int				render_background(t_data *data);
+int				main_loop(t_data *data);
+int				key_press(int keycode, t_data *data);
+int				key_release(int keycode, t_data *data);
+int				close_window(t_data *data);
 
 /* --- Init ----------------------------------------------------------------- */
 
@@ -216,6 +214,8 @@ void			debug_y_collision(t_data *data, double new_x, double new_y);
 void			init_map(t_data *data, char *map_file);
 void			init_textures(t_textures *textures);
 void			init_colors(t_data *data);
+void			initialize_game_data(t_data *data);
+void			init(char *file_name, t_data *data, t_textures *textures);
 
 /* --- Parse ---------------------------------------------------------------- */
 
@@ -234,7 +234,7 @@ t_result		check_scene_description(t_data *data);
 t_result		find_textures_and_colors(t_data *data);
 t_result		find_map(t_data *data);
 t_boolean		is_map_empty(char *file);
-t_boolean		is_map_last(t_data *data);
+t_result		is_map_last(t_data *data);
 
 //	check_textures.c
 t_result		check_textures(t_data *data, t_textures *textures);
@@ -257,18 +257,13 @@ t_result		check_player(t_data *data);
 t_result		create_arrays(t_data *data);
 
 //	create_arrays2.c
-void			allocate_map_array(t_data *data);
+int				allocate_map_array(t_data *data);
 t_result		fill_map_array(t_data *data);
-void			allocate_visited(t_data *data);
+int				allocate_visited(t_data *data);
 void			fill_visited(t_data *data);
 
 //	check_walls.c
 t_result		check_walls(t_data *data);
-
-//	check_walls2.c
-void			start_dfs_search(t_data *data);
-t_boolean		is_map_closed(t_data *data);
-t_boolean		is_fully_walkable(t_data *data);
 
 //	parse_utils.c
 int				is_file_type_valid(char *filename, char *expected_extension);
@@ -284,11 +279,15 @@ void			trim_and_reduce_spaces(char *line);
 //	parse_utils3.c
 unsigned int	rgb_to_hex(int *rgb_array);
 int				find_min(int a, int b);
+int				free_all(t_textures *textures, t_map *map);
+void			display_map_error(char *str, int code);
 
 //	reading_utils.c
 int				open_file(const char *file_path);
 void			read_until_line(int fd, char **line, int endline_index);
-void			read_until_end_of_file(int fd, char **line);
+t_result		read_until_end_of_file(int fd, char **line, t_result res);
+
+/* --- Engine --------------------------------------------------------------- */
 
 // player_move.c
 void			rotate_player(t_data *data);
@@ -298,7 +297,6 @@ void			update_player_x(t_data *data);
 void			update_player_y(t_data *data);
 void			update_player(t_data *data);
 
-/* --- ?????? --------------------------------------------------------------- */
 int				is_wall(t_data *data, double x, double y);
 void			normalize_angle(double *angle);
 void			init_player(t_data *data);
@@ -329,5 +327,15 @@ int				key_press(int keycode, t_data *data);
 int				key_release(int keycode, t_data *data);
 void			normalize_angle(double *angle);
 
+/* --- Debug ---------------------------------------------------------------- */
 
+//	debug.c
+void			print_map_by_lines(char **array, size_t height, size_t width);
+void			print_map_by_chars(char **array, size_t height, size_t width);
+void			debug_x_collision(t_data *data, double new_x, double new_y);
+void			debug_y_collision(t_data *data, double new_x, double new_y);
+
+//	print_visited_map.c
+void			display_checks(void);
+void			print_visited_map(t_data *data);
 #endif

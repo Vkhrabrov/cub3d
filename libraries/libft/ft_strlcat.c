@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 22:09:32 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/05/26 22:54:08 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:46:55 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,37 +54,3 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 		return (dst_length + src_length);
 	return (dstsize + src_length);
 }
-
-// #include <string.h>
-// int	main(void)
-// {
-// 	char dst[15] = "Hello";
-// 	char src[] = " World!";
-
-// 	char dst1[15] = "Hello";
-// 	char src1[] = " World!";
-
-// 	printf("\nstrlcat returned value    = %lu\n",  strlcat(dst, src, ));
-// 	printf("strlcat dst   : %s\n", dst);
-// 	printf("-------------------------------\n");
-// 	printf("ft_strlcat returned value = %lu\n",  ft_strlcat(dst1, src1, 15));	
-// 	printf("ft_strlcat ds : %s\n\n", dst1);
-// 	return (0);
-// } 	
-#include <string.h>
-/*int	main(void)
-{
-    char dst[15] = "Hello";
-    char src[] = ".World!";
-
-    char dst1[15] = "Hello";
-    char src1[] = ".World!";
-
-    printf("strlcat returned value      : %lu\n", strlcat(dst, src, 7));
-    printf("strlcat concatenated dst    : %s\n", dst);
-    printf("--------------------\n");
-    printf("ft_strlcat returned value   : %lu\n", ft_strlcat(dst1, src1, 7));
-    printf("ft_strlcat concatenated dst : %s\n", dst1);
-
-    return (0);
-}*/

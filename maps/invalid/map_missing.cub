@@ -1,8 +1,8 @@
-NO textures/test/north.xpm
-SO textures/test/south.xpm
-WE textures/test/west.xpm
-EA textures/test/east.xpm
+NO ./textures/color_stone.xpm
+SO ./textures/purple_stone.xpm
+EA ./textures/grey_stone.xpm
+WE ./textures/blue_stone.xpm
 
-F 20,20,20
-C 200,200,200
+C 135,206,235
+F 139,69,19
 

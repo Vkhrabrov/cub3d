@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 12:41:14 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/11 00:42:10 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_result	find_textures_and_colors(t_data *data)
 		if (data->map.height == find_file_length(data->map.file))
 			printf("Error\nTextures/colors: Not defined in the file\n");
 		else
-			printf("Error\nMap: Wrong position (placed first in file)\n");
+			printf("Error\nMap: Wrong position (not placed last in file)\n");
 		return (FAIL);
 	}
 	return (SUCCESS);
@@ -29,7 +29,7 @@ t_result	find_map(t_data *data)
 {
 	if (data->map.height == 0)
 	{
-		printf("Error\n Map: Not found in the file\n");
+		printf("Error\nMap: Not found in the file\n");
 		return (FAIL);
 	}
 	return (SUCCESS);
@@ -63,30 +63,26 @@ t_boolean	is_map_empty(char *file)
 	return (0);
 }
 
-t_boolean	is_map_last(t_data *data)
+t_result	is_map_last(t_data *data)
 {
 	int		fd;
 	char	*line;
-	int		map_end_line;
-	int		flag;
 
-	flag = TRUE;
 	fd = open_file(data->map.file);
 	if (fd < 0)
-		return (FALSE);
+		return (FAIL);
 	line = get_next_line(fd);
-	map_end_line = data->map.starting_line + data->map.height;
-	read_until_line(fd, &line, map_end_line + 1);
-	while (line != NULL && flag == TRUE)
+	read_until_line(fd, &line, data->map.ending_line + 1);
+	while (line != NULL)
 	{
 		if (line[0] != '\n')
 		{
 			printf("Error\nMap: Wrong position (not placed last in file)\n");
-			flag = FALSE;
+			return (read_until_end_of_file(fd, &line, FAIL));
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
-	read_until_end_of_file(fd, &line);
-	return (flag);
+	close(fd);
+	return (SUCCESS);
 }

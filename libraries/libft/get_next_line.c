@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_MINE.c                               :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 22:05:42 by ccarrace          #+#    #+#             */
-/*   Updated: 2023/07/29 18:42:14 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:24:21 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static char	*ft_load_data(int fd, char *buffer, char *depot)
 char	*get_next_line(int fd)
 {
 	char		*buffer;
-	char static	*depot;
+	static char	*depot;
 	char		*store;
 	char		*line;
 

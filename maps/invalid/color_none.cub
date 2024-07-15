@@ -1,7 +1,7 @@
-NO textures/test/north.xpm
-SO textures/test/south.xpm
-WE textures/test/west.xpm
-EA textures/test/east.xpm
+NO ./textures/color_stone.xpm
+SO ./textures/purple_stone.xpm
+EA ./textures/grey_stone.xpm
+WE ./textures/blue_stone.xpm
 
 11111
 10001

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ccarrace <ccarrace@student.42barcel>       +#+  +:+       +#+        */
+/*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 18:38:28 by ccarrace          #+#    #+#             */
-/*   Updated: 2022/07/03 22:45:04 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:41:27 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ char	*ft_itoa(int n)
 		str[len - 1] = (n % 10) + '0';
 		n = n / 10;
 		len--;
-	}	
+	}
 	return (str);
 }

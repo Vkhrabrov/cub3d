@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 23:04:37 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:48:04 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,14 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	new_str[i] = '\0';
 	return (new_str);
 }
+
 /*
 #include <stdio.h>
 #include <stdlib.h>
 
-// Function to convert characters at even indices to uppercase and odd indices to lowercase
+// Function to convert characters at even indices
+// to uppercase and odd indices to lowercase
+
 char my_custom_function(unsigned int index, char c)
 {
     if (index % 2 == 0) {

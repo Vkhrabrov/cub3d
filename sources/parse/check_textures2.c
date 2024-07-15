@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 13:06:41 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:28:29 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/08 18:35:40 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ t_boolean	are_texture_paths_valid(t_textures *textures)
 		fd = open(path, O_RDONLY);
 		if (fd < 0)
 		{
-			printf("Error\nOpen: Cannot open '%s'\n", path);
+			printf("Error\nOpen: Could not open texture '%s'\n", path);
 			return (FALSE);
 		}
 		close(fd);

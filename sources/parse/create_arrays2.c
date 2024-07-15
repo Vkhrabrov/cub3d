@@ -6,21 +6,21 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 13:37:02 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:38:38 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	allocate_map_array(t_data *data)
+int	allocate_map_array(t_data *data)
 {
 	size_t	i;
 
-	data->map.array = malloc((data->map.height) * sizeof(char *));
+	data->map.array = malloc(data->map.height * sizeof(char *));
 	if (!data->map.array)
 	{
 		printf("Error\nMalloc: Could not allocate memory for map\n");
-		return ;
+		return (0);
 	}
 	i = 0;
 	while (i < data->map.height)
@@ -28,11 +28,15 @@ void	allocate_map_array(t_data *data)
 		data->map.array[i] = malloc((data->map.width + 1) * sizeof(char));
 		if (!data->map.array[i])
 		{
-			printf("Error\nMalloc: Could not allocate memory for map\n");
-			return ;
+			printf("Error\nMalloc: Could not allocate memory for map row\n");
+			while (i > 0)
+				free(data->map.array[--i]);
+			free(data->map.array);
+			return (0);
 		}
 		i++;
 	}
+	return (1);
 }
 
 static void	process_line(t_data *data, char *line)
@@ -72,37 +76,35 @@ t_result	fill_map_array(t_data *data)
 		line = get_next_line(fd);
 		data->map.i++;
 	}
-	read_until_end_of_file(fd, &line);
-	return (SUCCESS);
+	return (read_until_end_of_file(fd, &line, SUCCESS));
 }
 
-void	allocate_visited(t_data *data)
+int	allocate_visited(t_data *data)
 {
-	size_t	i;
-
 	data->map.visited = malloc((data->map.height + 2) * sizeof(char *));
 	if (!data->map.visited)
 	{
 		printf("Error\nMalloc: Could not allocate memory for visited_map\n");
-		return ;
+		return (0);
 	}
-	i = 0;
-	while (i < data->map.height + 2)
+	data->map.i = 0;
+	while (data->map.i < data->map.height + 2)
 	{
-		data->map.visited[i] = malloc((data->map.width + 2)
+		data->map.visited[data->map.i] = malloc((data->map.width + 2)
 				* sizeof(char));
-		if (!data->map.visited[i])
+		if (!data->map.visited[data->map.i])
 		{
 			printf("Error\nMalloc: Couldn't allocate memory for visited_map\n");
-			while (i > 0)
-				free(data->map.visited[--i]);
+			while (data->map.i > 0)
+				free(data->map.visited[--(data->map.i)]);
 			free(data->map.visited);
-			return ;
+			return (0);
 		}
-		ft_memset(data->map.visited[i], ' ', (data->map.width + 1));
-		data->map.visited[i][data->map.width + 1] = '\0';
-		i++;
+		ft_memset(data->map.visited[data->map.i], ' ', (data->map.width + 1));
+		data->map.visited[data->map.i][data->map.width + 1] = '\0';
+		data->map.i++;
 	}
+	return (1);
 }
 
 void	fill_visited(t_data *data)

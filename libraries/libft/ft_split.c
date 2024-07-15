@@ -6,7 +6,7 @@
 /*   By: ccarrace <ccarrace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 00:03:33 by ccarrace          #+#    #+#             */
-/*   Updated: 2024/07/07 19:10:01 by ccarrace         ###   ########.fr       */
+/*   Updated: 2024/07/09 23:46:00 by ccarrace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * malloc(), free()
  *
  * RETURN VALUES
- * The array of new strings t_resulting from the split or NULL if allocation fails
+ * The array of new strings resulting from the split or NULL if allocation fails
  * 
  * COMMENTS
  * 1. Create a function to count the number of words contained in the string
@@ -39,18 +39,18 @@
  *    previously allocating enough memory (len of word + 1)
  *    Split the string into a two dimensional array as drawn below:
  *
- * 				     				   ------  char_index =  0   1   2   3
- *	 		   			  w-index = 0 | ptr1 | ----------> | o | n | e | \0|
+ * 				     				   ------  char_index = 0 1 2 3
+ *	 		   			  w-index = 0 | ptr1 | ----------> |o|n|e|\0|
  *				      				  |------|      
- * 						  w_index = 1 | ptr2 | ----------> | t | w | o | \0|
+ * 						  w_index = 1 | ptr2 | ----------> |t|w|o|\0|
  * str = "one,two,three" ---> 	      |------|
- * c = ','				  w_index = 2 | ptr3 | ----------> | t | h | r | e | e | \0|
+ * c = ','				  w_index = 2 | ptr3 | ----------> |t|h|r|e|e|\0|
  *				      				  |------|
  *						  w_index = 3 | NULL |
  *				      				   ------
- *	 Before filling the array , we must allocate enough memory for each array of
- *	 single word (word_len + 1). If allocation fails, we call ft_free. 
-  */
+ *	 Before filling the array , we must allocate enough memory for each array
+ *	 of single word (word_len + 1). If allocation fails, we call ft_free. 
+ */
 
 #include "libft.h"
 
@@ -91,7 +91,7 @@ static int	ft_word_len(char const *str, char c, int i)
 static char	**ft_free(char **str_arr, int w_index)
 {
 	while (w_index >= 0)
-	{	
+	{
 		free(str_arr[w_index]);
 		w_index--;
 	}
